@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{481B21AA-B49B-41C8-848E-DF0883C294C8}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CGFSMVVM</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\EmojiRatingView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MainView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentEmoji.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EmojiRatingViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\EmojiIconModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GlobalModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentProgressPane.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MultiOptionView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentMultiOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MultiOpsLabelModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MultiOptionsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MultiSelectionView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MultiSelectionsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentMultiSelections.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\TextCommentView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentComment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TextCommentViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentHeatBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\HeatBarView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HeatButtonModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HeatBarViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentDualOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\DualOptionView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DualOptionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DualOptionViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\QuestionsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\OtherQuestionsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RatingScaleModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\APIGetServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\PageLoadHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CommonPropertySetter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbackCart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataParsers\QuestionJsonDeserializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\TempData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentNavPane.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GuestDetailsView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GuestDetailsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\BehaviorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\EventToCommandBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataParsers\ReservationDetailsDeserializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ReservationDetailsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataParsers\FeedbackSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\FinishPageView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\FinishPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\POSTDataModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\APIPostServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\NativeCamera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\UserModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\MailSender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NewsLetterViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\NewsLetterView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FTPService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ContactDetailsView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContactDetailsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Login.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\AutoConfigView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ConfigurationAPIServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ConfigModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataParsers\ConfigDeserializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HotelModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DeviceInfoModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ViewModels\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Services\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Helpers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)DataParsers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Behaviors\" />
+  </ItemGroup>
+</Project>
