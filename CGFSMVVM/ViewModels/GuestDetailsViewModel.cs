@@ -159,7 +159,7 @@ namespace CGFSMVVM.ViewModels
 
             string date = DateTime.Now.ToString("yyyy-MM-dd");
 
-            Dictionary<string, ReservationDetailsModel> ReservationDetailsDictionary = await ReservationDetailsDeserializer.DeserializeReservationDetails(Settings.HotelNumber, roomNoEntry.Text, date).ConfigureAwait(true);
+			Dictionary<string, ReservationDetailsModel> ReservationDetailsDictionary = await ReservationDetailsDeserializer.DeserializeReservationDetails(Settings.HotelCode, roomNoEntry.Text, date).ConfigureAwait(true);
 
             if (ReservationDetailsDictionary != null)
             {
@@ -251,7 +251,7 @@ namespace CGFSMVVM.ViewModels
                 await label.ScaleTo(2, 200, Easing.CubicIn);
                 await label.ScaleTo(1, 200, Easing.CubicOut);
 
-                bool isGivenFeedback = await IsFeedbackGiven(Settings.HotelCode, resNo, guestID);
+				bool isGivenFeedback = await IsFeedbackGiven(Settings.HotelIdentifier, resNo, guestID);
 
                 if(!isGivenFeedback)
                 {

@@ -42,7 +42,7 @@ namespace CGFSMVVM
             };
 
             _titleImage = new Image { Aspect = Aspect.AspectFit };
-            _titleImage.Source = ImageSource.FromFile($"Images/banners/{Settings.HotelNumber}.jpg");
+			_titleImage.Source = ImageSource.FromFile($"Images/banners/{Settings.HotelCode}.jpg");
             _titleImage.HeightRequest = 150;
 
             _formLayout = new StackLayout

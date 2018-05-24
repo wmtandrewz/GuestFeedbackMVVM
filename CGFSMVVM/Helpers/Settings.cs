@@ -25,19 +25,37 @@ namespace CGFSMVVM.Helpers
             }
         }
 
+		private const string AccessTokenKey = "access_key";
+        private static readonly string AccessTokenDefault = string.Empty;
+
+        private const string ExpiresTimeKey = "expires_key";
+        private static readonly string ExpiresTimeDefault = string.Empty;
+
+		private const string SAPCookie = "sap-XSRF_GWP_100";
+		private static readonly string SettingsSAPCookieDefault = "sap-XSRF_GWP_100";
+        
+		private const string UsernameKey = "username_key";
+        private static readonly string UsernameDefault = string.Empty;
+
+		private const string PasswordKey = "password_key";
+        private static readonly string PasswordDefault = string.Empty;
+
+		private const string SAPURL = "SAPURL";
+		private static readonly string SettingsSAPURLDefault = "https://alastor.keells.lk:44300";
+
         /// <summary>
         /// Gets or sets the hotel number.
         /// </summary>
         /// <value>The hotel number.</value>
-        public static string HotelNumber
+        public static string HotelIdentifier
         {
             get
             {
-                return AppSettings.GetValueOrDefault("HotelNumber", "");
+				return AppSettings.GetValueOrDefault("HotelIdentifier", string.Empty);
             }
             set
             {
-                AppSettings.AddOrUpdateValue("HotelNumber", value);
+				AppSettings.AddOrUpdateValue("HotelIdentifier", value);
             }
         }
 
@@ -56,50 +74,7 @@ namespace CGFSMVVM.Helpers
                 AppSettings.AddOrUpdateValue("HotelCode", value);
             }
         }
-
-
-        /// <summary>
-        /// Gets or sets the name of the hotel.
-        /// </summary>
-        /// <value>The name of the hotel.</value>
-        public static string HotelName
-        {
-            get
-            {
-                return AppSettings.GetValueOrDefault("HotelName", "");
-            }
-            set
-            {
-                AppSettings.AddOrUpdateValue("HotelName", value);
-            }
-        }
-
-        //public static string DevelopmentUrl
-        //{
-        //    get
-        //    {
-        //        return AppSettings.GetValueOrDefault("DevelopmentUrl", "https://jkhapimdev.azure-api.net/api/beta/v1/");
-        //    }
-        //    set
-        //    {
-        //        AppSettings.AddOrUpdateValue("DevelopmentUrl", value);
-
-        //    }
-        //}
-
-        //public static string DevelopmentInhouseDate
-        //{
-        //    get
-        //    {
-        //        return AppSettings.GetValueOrDefault("DevelopmentInhouseDate", "2017-03-18");
-        //    }
-        //    set
-        //    {
-        //        AppSettings.AddOrUpdateValue("DevelopmentInhouseDate", value);
-
-        //    }
-        //}
-
+       
 
         /// <summary>
         /// Gets or sets the SMTPP assword.
@@ -229,22 +204,6 @@ namespace CGFSMVVM.Helpers
         }
 
         /// <summary>
-        /// Gets or sets the hotel list.
-        /// </summary>
-        /// <value>The hotel list.</value>
-        public static string HotelList
-        {
-            get
-            {
-                return AppSettings.GetValueOrDefault("HotelList", "");
-            }
-            set
-            {
-                AppSettings.AddOrUpdateValue("HotelList", value);
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the app version.
         /// </summary>
         /// <value>The app version.</value>
@@ -260,51 +219,78 @@ namespace CGFSMVVM.Helpers
             }
         }
 
-        /// <summary>
-        /// Gets or sets the name of the device.
-        /// </summary>
-        /// <value>The name of the device.</value>
-        public static string DeviceName
+
+        
+		public static string AccessToken
         {
             get
             {
-                return AppSettings.GetValueOrDefault("DeviceName", "");
+                return AppSettings.GetValueOrDefault(AccessTokenKey, AccessTokenDefault);
             }
             set
             {
-                AppSettings.AddOrUpdateValue("DeviceName", value);
+                AppSettings.AddOrUpdateValue(AccessTokenKey, value);
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="T:CGFSMVVM.Helpers.Settings"/> is device registered.
-        /// </summary>
-        /// <value><c>true</c> if is device registered; otherwise, <c>false</c>.</value>
-        public static bool IsDeviceRegistered
+        public static string ExpiresTime
         {
             get
             {
-                return AppSettings.GetValueOrDefault("IsDeviceRegistered", false);
+                return AppSettings.GetValueOrDefault(ExpiresTimeKey, ExpiresTimeDefault);
             }
             set
             {
-                AppSettings.AddOrUpdateValue("IsDeviceRegistered", value);
+                AppSettings.AddOrUpdateValue(ExpiresTimeKey, value);
+            }
+        }
+        
+
+        public static string SettingsSAPCookie
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(SAPCookie, SettingsSAPCookieDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(SAPCookie, value);
             }
         }
 
-        /// <summary>
-        /// Gets or sets the device current UUID.
-        /// </summary>
-        /// <value>The device current UUID.</value>
-        public static string DeviceCurrentUUID
+		public static string Username
         {
             get
             {
-				return AppSettings.GetValueOrDefault("DeviceCurrentUUID", string.Empty);
+                return AppSettings.GetValueOrDefault(UsernameKey, UsernameDefault);
             }
             set
             {
-                AppSettings.AddOrUpdateValue("DeviceCurrentUUID", value);
+                AppSettings.AddOrUpdateValue(UsernameKey, value);
+            }
+        }
+
+        public static string Password
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(PasswordKey, PasswordDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(PasswordKey, value);
+            }
+        }
+
+		public static string SettingsSAPURL
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(SAPURL, SettingsSAPURLDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(SAPURL, value);
             }
         }
 

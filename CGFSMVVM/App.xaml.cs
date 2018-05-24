@@ -1,4 +1,6 @@
 ﻿using System.Threading;
+using CGFSMVVM.Helpers;
+using CGFSMVVM.Models;
 using CGFSMVVM.Views;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -24,16 +26,65 @@ namespace CGFSMVVM
             InitializeComponent();
 
             CrossConnectivity.Current.ConnectivityChanged += Current_ConnectivityChanged;
+            
 
-
-            _navigationPage = new NavigationPage(new MainView())
+			if (Settings.Username != "" && Settings.Password != "" && Settings.HotelCode != "")
             {
-                BackgroundColor=Color.Black,
-                BarTextColor=Color.White,
-                BarBackgroundColor = Color.Black,
-            };
+                //Restore Username and Password
+                var user = new UserModel();
+                user = new UserModel()
+                {
+                    Username = Settings.Username,
+                    Password = Settings.Password
+                };
 
-            MainPage = _navigationPage;
+                Constants._gatewayURL = Settings.SettingsSAPURL;
+                Constants._cookie = Settings.SettingsSAPCookie;
+                Constants._user = user;
+                Constants._hotel_code = Settings.HotelCode;
+                //Restore AccessToken and Expires Time
+
+                Constants._access_token = Settings.AccessToken;
+                Constants._expires_in = Settings.ExpiresTime;
+
+
+
+				_navigationPage = new NavigationPage(new MainView())
+                {
+                    BackgroundColor = Color.Black,
+                    BarTextColor = Color.White,
+                    BarBackgroundColor = Color.Black,
+                };
+
+                MainPage = _navigationPage;
+
+            }
+            else //Not Logged Inn
+            {
+                Settings.SettingsSAPURL = "https://alastor.keells.lk:44300";
+                Settings.SettingsSAPCookie = "sap-XSRF_GWP_100";
+                
+				_navigationPage = new NavigationPage(new LoginView())
+                {
+                    BackgroundColor = Color.Black,
+                    BarTextColor = Color.White,
+                    BarBackgroundColor = Color.Black,
+                };
+
+                MainPage = _navigationPage;
+            }
+
+			MessagingCenter.Subscribe<UserLogout>(this, "logout", (sender) =>
+            {
+				_navigationPage = new NavigationPage(new LoginView())
+                {
+                    BackgroundColor = Color.Black,
+                    BarTextColor = Color.White,
+                    BarBackgroundColor = Color.Black,
+                };
+
+                MainPage = _navigationPage;
+            });
 
         }
 

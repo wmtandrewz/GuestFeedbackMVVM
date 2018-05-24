@@ -29,11 +29,11 @@ namespace CGFSMVVM.DataParsers
             HotelQuestionDictionary.Clear();
             QuestionNumberList.Clear();
 
-			if (!string.IsNullOrEmpty(Settings.HotelCode))
+			if (!string.IsNullOrEmpty(Settings.HotelIdentifier))
 			{
-				string _result = await APIGetServices.GetQuestionsFromAPI(Settings.HotelCode, "en-US", "GC").ConfigureAwait(true);
+				string _result = await APIGetServices.GetQuestionsFromAPI(Settings.HotelIdentifier, "en-US", "GC").ConfigureAwait(true);
 
-				FeedbackCart._hotelCode = Settings.HotelCode;
+				FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
 
 				List<QuestionsModel> HotelQuestionsList = JsonConvert.DeserializeObject<List<QuestionsModel>>(_result);
 

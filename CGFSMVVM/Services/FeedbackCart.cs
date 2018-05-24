@@ -10,7 +10,7 @@ namespace CGFSMVVM.Services
     /// </summary>
     public static class FeedbackCart
     {
-        public static string _hotelCode { get; set; }
+        public static string _hotelIdentifier { get; set; }
         public static string _roomNum { get; set; }
         public static string _resNum { get; set; }
         public static string _guestID { get; set; }
@@ -50,7 +50,7 @@ namespace CGFSMVVM.Services
             CommentNVC = new NameValueCollection();
             OtherNVC = new NameValueCollection();
 
-            _hotelCode = null;
+            _hotelIdentifier = null;
             _roomNum = null;
             _resNum = null;
             _guestID = null;
@@ -88,7 +88,7 @@ namespace CGFSMVVM.Services
                 CreatedBy = _createdBy,
                 EndTime = _endTime,
                 StartTime = _startTime,
-                HtlCode = _hotelCode,
+                HtlCode = _hotelIdentifier,
                 GuestAddress = _guestAddress,
                 MainCategoryId = _mainCatId
             };

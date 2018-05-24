@@ -16,11 +16,11 @@ namespace CGFSMVVM.Views
 {
     public class MainView : ContentPage
     {
-
-        private StackLayout _baseLayout;
+        
+        private StackLayout _baseLayout, _toolBarLayout;
         private Image _headerImage,_settingsIcon;
         private Label _welcomeLabel,_titleLabel,_copyrightLabel;
-        private Button _startButton;
+        private Button _startButton, _logoutButton;
         private ActivityIndicator _indicator;
 
 		private bool RegistrationCheckLock = false;
@@ -38,6 +38,7 @@ namespace CGFSMVVM.Views
 
         private void InitUI()
         {
+			
 
             _baseLayout = new StackLayout()
             {
@@ -45,6 +46,15 @@ namespace CGFSMVVM.Views
                 VerticalOptions = LayoutOptions.Fill,
                 Padding = new Thickness(10,50,10,50)
             };
+
+			_toolBarLayout = new StackLayout()
+			{
+				Orientation = StackOrientation.Horizontal,
+				BackgroundColor = Color.FromRgb(0, 0, 0),
+				VerticalOptions = LayoutOptions.Fill,
+				HorizontalOptions = LayoutOptions.End,
+				HeightRequest = 20
+			};
 
             _settingsIcon = new Image
             {
@@ -54,6 +64,24 @@ namespace CGFSMVVM.Views
                 WidthRequest = 50,
                 HorizontalOptions = LayoutOptions.End
             };
+            
+			_logoutButton = new Button
+			{
+				HeightRequest = 30,
+				FontSize = 20,
+				WidthRequest = 100,
+				Text = "Logout",
+				HorizontalOptions = LayoutOptions.End
+			};
+
+			_logoutButton.Clicked += async delegate
+			{
+				 new UserLogout().logout();
+			};
+
+			_toolBarLayout.Children.Add(_logoutButton);
+			_toolBarLayout.Children.Add(_settingsIcon);
+
             TapGestureRecognizer _tapGestureRecognizer = new TapGestureRecognizer();
             _tapGestureRecognizer.SetBinding(TapGestureRecognizer.CommandProperty, "SettingsTappedCommand");
             _settingsIcon.GestureRecognizers.Add(_tapGestureRecognizer);
@@ -122,7 +150,7 @@ namespace CGFSMVVM.Views
             };
             _startButton.SetBinding(Button.CommandProperty, new Binding("LaunchStartButtonCommand"));
 
-            _baseLayout.Children.Add(_settingsIcon);
+			_baseLayout.Children.Add(_toolBarLayout);
             _baseLayout.Children.Add(_headerImage);
             _baseLayout.Children.Add(_welcomeLabel);
             _baseLayout.Children.Add(_titleLabel);
@@ -135,7 +163,7 @@ namespace CGFSMVVM.Views
         
         protected override async void OnAppearing()
         {
-
+        
 			bool isConnected = CrossConnectivity.Current.IsConnected;
 
 			if (isConnected)
@@ -144,7 +172,6 @@ namespace CGFSMVVM.Views
 
 				AccessQuestionAPI();
 
-				CheckIsRegistered();
 			}
 			else
 			{
@@ -176,67 +203,15 @@ namespace CGFSMVVM.Views
                 _indicator.IsRunning = false;
 
                 _startButton.IsEnabled = true;
-                
+                                
 			}
 			else
 			{
-				CheckAppConfigurations();
+				new UserLogout().logout();
 			}
 
         }
 
-        private async void CheckAppConfigurations()
-		{
-			RegistrationCheckLock = true;
-
-			if(string.IsNullOrEmpty(Settings.DeviceCurrentUUID) || string.IsNullOrEmpty(Settings.HotelCode))
-			{
-				Debug.WriteLine("CheckAppConfigurations => Re-register");
-
-				await Application.Current.MainPage.DisplayAlert("Device Not Registered", "Please register the device", "OK").ConfigureAwait(true);
-                await Navigation.PushAsync(new Login());
-			}
-
-		}
-
-		private async void CheckIsRegistered()
-		{
-			try
-			{
-				if (!RegistrationCheckLock)
-				{
-					var responce = await ConfigurationAPIServices.GetDeviceInformation(Settings.DeviceCurrentUUID);
-
-					if (!string.IsNullOrEmpty(responce))
-					{
-						DeviceInfoModel deviceInfoModel = ConfigDeserializer.DeserializeDeviceInfo(responce);
-
-						if (deviceInfoModel != null)
-						{
-							var isRegistered = Convert.ToBoolean(deviceInfoModel.IsResgistered);
-
-							if (!isRegistered)
-							{
-								Debug.WriteLine("CheckIsRegistered => Re-register");
-
-								Settings.IsDeviceRegistered = false;
-								await Application.Current.MainPage.DisplayAlert("App has been reset", "Please register the device", "OK").ConfigureAwait(true);
-								await Navigation.PushAsync(new Login());
-							}
-							else
-							{
-								Debug.WriteLine("CheckIsRegistered => Registered");
-							}
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Analytics.TrackEvent($"MainView.CheckIsRegistered {ex}");
-			}
-
-		}
                 
     }
 }

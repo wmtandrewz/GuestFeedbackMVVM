@@ -212,6 +212,7 @@
     <BundleResource Include="Images\banners\3150.jpg" />
     <BundleResource Include="Images\SettingsIcon.png" />
     <BundleResource Include="Sounds\5minsilence.mp3" />
+    <BundleResource Include="Images\CGFSLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />

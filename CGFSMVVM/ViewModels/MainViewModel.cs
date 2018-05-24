@@ -41,7 +41,7 @@ namespace CGFSMVVM.ViewModels
 
             NativeCamera.InitCamera();
 
-            FeedbackCart._hotelCode = Settings.HotelCode;
+			FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
 
         }
 
@@ -50,7 +50,7 @@ namespace CGFSMVVM.ViewModels
             if(string.IsNullOrEmpty(Settings.BaseDomainURL))
             {
                 await Application.Current.MainPage.DisplayAlert("Gateway Unavailable", "Please set App configurations", "OK").ConfigureAwait(true);
-                await _navigation.PushAsync(new Login());
+				new UserLogout().logout();
             }
         }
 
@@ -67,7 +67,7 @@ namespace CGFSMVVM.ViewModels
 
         private void SetingsButtonTapped()
         {
-            _navigation.PushAsync(new AutoConfigView());
+            //_navigation.PushAsync(new AutoConfigView());
         }
 
         private async void StartButtonClicked()
@@ -109,6 +109,7 @@ namespace CGFSMVVM.ViewModels
 			{
 				Analytics.TrackEvent($"MainViewModel.CheckApp Version {ex.Message}");
 				Crashes.TrackError(ex);
+				new UserLogout().logout();
 			}
 
 		}
@@ -116,9 +117,9 @@ namespace CGFSMVVM.ViewModels
 		private void SetDeviceInfo()
 		{
 
-			if (!string.IsNullOrEmpty(Settings.DeviceCurrentUUID))
+			if (!string.IsNullOrEmpty(Settings.Username))
 			{
-				FeedbackCart._createdBy = Settings.DeviceCurrentUUID;
+				FeedbackCart._createdBy = Settings.Username;
             }
         }
     }

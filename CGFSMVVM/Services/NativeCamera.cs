@@ -86,14 +86,14 @@ namespace CGFSMVVM.Services
 
                     if (Settings.EmailServiceStat)
                     {
-                        await MailSender.SendsmtpMail("Image recieved", "Guest Feedback Recieved", guestImage, FeedbackCart._hotelCode, FeedbackCart._resNum);
+                        await MailSender.SendsmtpMail("Image recieved", "Guest Feedback Recieved", guestImage, FeedbackCart._hotelIdentifier, FeedbackCart._resNum);
                     }
 
                     if (guestImage != null)
                     {
                         FeedbackCart._guestImage = guestImage;
 
-                        FTPService.UploadImageHttpPost(guestImage, FeedbackCart._hotelCode, FeedbackCart._resNum, FeedbackCart._guestID);
+                        FTPService.UploadImageHttpPost(guestImage, FeedbackCart._hotelIdentifier, FeedbackCart._resNum, FeedbackCart._guestID);
 
                         _isLocked = false;
                     }

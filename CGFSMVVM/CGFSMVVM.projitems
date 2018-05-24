@@ -68,16 +68,25 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\FTPService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\ContactDetailsView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContactDetailsViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\Login.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\AutoConfigView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ConfigurationAPIServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ConfigModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataParsers\ConfigDeserializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HotelModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DeviceInfoModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SAPAccessService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\oAuthLogin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserLogout.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Models\" />
