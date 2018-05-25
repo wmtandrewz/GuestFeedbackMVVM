@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Plugin.Connectivity;
 using Plugin.DeviceInfo;
+using Plugin.Geolocator;
 using Xamarin.Forms;
 
 namespace CGFSMVVM.ViewModels
@@ -114,13 +116,43 @@ namespace CGFSMVVM.ViewModels
 
 		}
 
-		private void SetDeviceInfo()
+		private async void SetDeviceInfo()
 		{
+            //string Lati = "";
+            //string Longti = "";
+
+            try
+            {
+                if (IsLocationAvailable())
+                {
+                    var locator = CrossGeolocator.Current;
+                    locator.DesiredAccuracy = 10;
+
+                    var position = await locator.GetPositionAsync(TimeSpan.FromMilliseconds(10000));
+                    Debug.WriteLine("Position Status: {0}", position.Timestamp);
+                    Debug.WriteLine("Position Latitude: {0}", position.Latitude);
+                    Debug.WriteLine("Position Longtitude: {0}", position.Longitude);
+                    //Lati = Math.Round(position.Latitude, 6).ToString();
+                    //Longti = Math.Round(position.Longitude, 6).ToString();
+                }
+            }
+            catch(Exception)
+            {
+
+            }
 
 			if (!string.IsNullOrEmpty(Settings.Username))
 			{
-				FeedbackCart._createdBy = Settings.Username;
+                FeedbackCart._createdBy = $"{Settings.Username}";
             }
+        }
+
+        public bool IsLocationAvailable()
+        {
+            if (!CrossGeolocator.IsSupported)
+                return false;
+
+            return CrossGeolocator.Current.IsGeolocationAvailable;
         }
     }
 }

@@ -89,8 +89,8 @@ namespace CGFSMVVM.Views
             _headerImage = new Image
             {
                 Aspect = Aspect.AspectFit,
-                Source = ImageSource.FromFile("Images/cinnamon.png"),
-                HeightRequest = 150,
+                Source = ImageSource.FromFile("Images/CGFSLogo.png"),
+                HeightRequest = 200,
                 HorizontalOptions = LayoutOptions.Center
             };
 

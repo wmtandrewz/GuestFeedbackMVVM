@@ -42,7 +42,7 @@
 
                     </StackLayout>
                     
-                    <Button x:Name="ForgotPasswordButton" Text="Forgot your password?" BackgroundColor="Transparent" BorderRadius="0" TextColor="#cecece" FontSize="14" Opacity="0" />
+                    <Button x:Name="ForgotPasswordButton" Text="Forgot your password?" BackgroundColor="Transparent" BorderRadius="0" TextColor="#cecece" FontSize="14" Opacity="0" Clicked="ForgotPasswordClickEvt" />
                     <ActivityIndicator x:Name="LoginIndicator" Color="White" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
 
                     <Label x:Name="TradeMark" Text="Designed and developed by Cinnamon IT" TextColor="#BF9BC4" FontSize="14" HorizontalTextAlignment="Center" IsVisible="false" VerticalOptions="Start"/>

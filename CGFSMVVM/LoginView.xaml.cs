@@ -213,9 +213,16 @@ namespace CGFSMVVM
             else
             {
                 if (access_token == Constants._userNotExistInNWGateway)
+                {
                     await DisplayAlert(Constants._headerMessage, Constants._userNotExistInNWGateway, Constants._buttonClose);
+                }
                 else
+                {
                     await DisplayAlert(Constants._headerWrongCredentials, Constants._incorrectlogincredentials, Constants._buttonClose);
+                    LoginEntryUsername.Text = "";
+                    LoginEntryPassword.Text = "";
+                    LoginEntryUsername.Focus();
+                }
             }
 
 

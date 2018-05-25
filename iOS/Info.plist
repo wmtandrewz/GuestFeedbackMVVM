@@ -43,12 +43,22 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Environment brightness detection</string>
+	<string>Device motion detection</string>
 	<key>CFBundleName</key>
 	<string>Cinnamon Feedback</string>
 	<key>CFBundleVersion</key>
 	<string>0050</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Required approximate location</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to location when in the background</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to location when in the background usage</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location when in the background usage</string>
 </dict>
 </plist>
