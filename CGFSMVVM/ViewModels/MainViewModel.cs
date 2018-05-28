@@ -86,7 +86,7 @@ namespace CGFSMVVM.ViewModels
                 
 				if (responceConfigs != null)
 				{
-					if (responceConfigs.AppVersion != Settings.AppVersion)
+                    if (Convert.ToDouble(responceConfigs.AppVersion) > Convert.ToDouble(Settings.AppVersion))
 					{
 						DateTime expiaryDate = Convert.ToDateTime(responceConfigs.PriorVersionExpiryDate);
 

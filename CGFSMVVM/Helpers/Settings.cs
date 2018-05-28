@@ -211,7 +211,7 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault("AppVersion", "3.0.0046");
+                return AppSettings.GetValueOrDefault("AppVersion", "3.5");
             }
             set
             {
