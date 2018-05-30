@@ -111,7 +111,6 @@ namespace CGFSMVVM.ViewModels
 			{
 				Analytics.TrackEvent($"MainViewModel.CheckApp Version {ex.Message}");
 				Crashes.TrackError(ex);
-				new UserLogout().logout();
 			}
 
 		}
