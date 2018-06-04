@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Input;
 using CGFSMVVM.DataParsers;
+using CGFSMVVM.iOS;
 using CGFSMVVM.Services;
 using Microsoft.AppCenter.Crashes;
 using Xamarin.Forms;
@@ -61,7 +63,8 @@ namespace CGFSMVVM.ViewModels
         private void FinishButtonPressed()
         {
             FeedbackCart.ClearSavedData();
-            Navigation.PopToRootAsync();
+            //Navigation.PopToRootAsync();
+            Thread.CurrentThread.Abort();
         }
     }
 }

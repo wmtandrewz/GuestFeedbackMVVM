@@ -47,7 +47,7 @@
 	<key>CFBundleName</key>
 	<string>Cinnamon Feedback</string>
 	<key>CFBundleVersion</key>
-	<string>0050</string>
+	<string>0052</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Required approximate location</string>
 	<key>UIBackgroundModes</key>

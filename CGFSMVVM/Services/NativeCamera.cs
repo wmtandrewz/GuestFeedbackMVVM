@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using CGFSMVVM.iOS.Services;
 using Xamarin.Forms;
 using Newtonsoft.Json;
 using CGFSMVVM.Helpers;
 using System.Threading;
 using Microsoft.AppCenter.Crashes;
+using CGFSMVVM.iOS.Streaming;
 
 namespace CGFSMVVM.Services
 {

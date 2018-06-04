@@ -6,9 +6,9 @@ using Foundation;
 using Microsoft.AppCenter.Crashes;
 using UIKit;
 
-[assembly: Xamarin.Forms.Dependency(typeof(CGFSMVVM.iOS.Services.CameraStream))]
+[assembly: Xamarin.Forms.Dependency(typeof(CGFSMVVM.iOS.Streaming.CameraStream))]
 
-namespace CGFSMVVM.iOS.Services
+namespace CGFSMVVM.iOS.Streaming
 {
     public class CameraStream
     {
