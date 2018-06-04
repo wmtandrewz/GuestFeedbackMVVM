@@ -63,8 +63,8 @@ namespace CGFSMVVM.ViewModels
         private void FinishButtonPressed()
         {
             FeedbackCart.ClearSavedData();
-            //Navigation.PopToRootAsync();
-            Thread.CurrentThread.Abort();
+            Navigation.PopToRootAsync();
+            //Thread.CurrentThread.Abort();
         }
     }
 }

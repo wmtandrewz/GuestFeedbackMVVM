@@ -168,7 +168,7 @@ namespace CGFSMVVM
                                 
 				await Navigation.PushAsync(new MainView());
 
-                
+                Navigation.RemovePage(this);
 
                 //Reset the text fields
                 LoginEntryUsername.Text = "";
@@ -275,6 +275,10 @@ namespace CGFSMVVM
                 Sleep(800);
 
                 base.OnAppearing();
+            }
+            else
+            {
+                
             }
             //Update Availability Indicator
             //VersionChecker();
