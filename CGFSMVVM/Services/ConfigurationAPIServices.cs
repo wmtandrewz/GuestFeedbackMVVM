@@ -34,88 +34,17 @@ namespace CGFSMVVM.Services
                 }
                 else
                 {
-					Analytics.TrackEvent("ConfigurationAPIServices.GetSystemConfigs return is null");
                     return "error";
                 }
             }
 
-            catch (Exception exception)
+            catch (Exception)
             {
-				Analytics.TrackEvent($"ConfigurationAPIServices.GetSystemConfigs return is exception with {exception.Message}");
-                Crashes.TrackError(exception);
                 return "error";
             }
 
         }
 
-        /// <summary>
-        /// Gets the device information from API.
-        /// </summary>
-        /// <returns>The device information.</returns>
-        /// <param name="uuid">UUID.</param>
-        public static async Task<string> GetDeviceInformation(string uuid)
-        {
 
-            try
-            {
-                HttpClient client = new HttpClient
-                {
-                    BaseAddress = new Uri(Settings.ConfigAPIUri)
-                };
-				var response = await client.GetAsync($"GFBConfig/GetDeviceInfo/{uuid}").ConfigureAwait(true);
-                var responceDevice = response.Content.ReadAsStringAsync().Result;
-
-				if (!string.IsNullOrEmpty(responceDevice))
-                {
-                    return responceDevice;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
-            catch (Exception exception)
-            {
-                Crashes.TrackError(exception);
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// Registers the device in Database.
-        /// </summary>
-        /// <returns>The device.</returns>
-        /// <param name="uuid">UUID.</param>
-        public static async Task<string> RegisterDevice(string uuid)
-        {
-
-            try
-            {
-                HttpClient client = new HttpClient
-                {
-                    BaseAddress = new Uri(Settings.ConfigAPIUri)
-                };
-                var response = await client.GetAsync($"GFBConfig/RegisterDevice/{uuid}");
-                var resultVersion = response.Content.ReadAsStringAsync().Result;
-
-				if (!string.IsNullOrEmpty(resultVersion))
-                {
-                    return resultVersion;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
-            catch (Exception exception)
-            {
-                Crashes.TrackError(exception);
-                return null;
-            }
-
-        }
     }
 }

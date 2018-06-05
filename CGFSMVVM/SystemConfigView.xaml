@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    x:Class="CGFSMVVM.SystemConfigView"
+    BackgroundColor="Black">
+    
+    <ContentPage.Content>
+        
+        <ScrollView>
+
+            <StackLayout Padding="10,10,10,10" VerticalOptions="StartAndExpand">
+                <Label Text="Device Registration" HorizontalOptions="Start" VerticalOptions="Start" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" FontSize="Large" TextColor="White"/>
+
+                <StackLayout Padding="10,20,10,10" VerticalOptions="Start" x:Name="layoutConfig" IsVisible="false">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="400"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" TextColor="Green" FontSize="Medium" Text="Hotel Name" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="1" Grid.Column="0" TextColor="Green" FontSize="Medium" Text="App Version" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="2" Grid.Column="0" TextColor="Green" FontSize="Medium" Text="Registration Status" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="3" Grid.Column="0" TextColor="Green" FontSize="Medium" Text="Device" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="5" Grid.Column="0" TextColor="Green" FontSize="Medium" Text="Device UUID" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Button Grid.Row="7" Grid.Column="0" x:Name="registerButton" Clicked="RegisterButton_Clicked" Text="Register" BackgroundColor="Green" TextColor="White" FontAttributes="Bold" FontSize="Medium" BorderColor="White" HeightRequest="30" WidthRequest="250" HorizontalOptions="Start">
+                            <Button.BorderRadius>
+                                <OnPlatform x:TypeArguments="x:Int32" iOS="10"/>
+                            </Button.BorderRadius>
+                        </Button>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="hotelNameLabel" TextColor="Red" FontSize="Medium" Text="N/A" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="versionLabel" TextColor="Red" FontSize="Medium" Text="N/A" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="regStatLabel" TextColor="Red" FontSize="Medium" Text="Not Registered" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="deviceLabel" TextColor="Red" FontSize="Medium" Text="Not Registered" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                        <Entry Grid.Row="5" Grid.Column="1" x:Name="uuidEntry" Placeholder="Enter Device UUID" BackgroundColor="White" FontSize="Medium" HorizontalTextAlignment="Start"/>
+
+                        <Button Grid.Row="7" Grid.Column="1" x:Name="exitButton" Clicked="ExitBtn_Clicked" Text="Exit" BackgroundColor="Blue" TextColor="White" FontAttributes="Bold" FontSize="Medium" BorderColor="White" HeightRequest="30" WidthRequest="250" HorizontalOptions="Start">
+                            <Button.BorderRadius>
+                                <OnPlatform x:TypeArguments="x:Int32" iOS="10"/>
+                            </Button.BorderRadius>
+                        </Button>
+                        
+                    </Grid>
+
+
+                </StackLayout>
+ 
+            </StackLayout>
+            
+        </ScrollView>
+        
+    </ContentPage.Content>
+    
+</ContentPage>

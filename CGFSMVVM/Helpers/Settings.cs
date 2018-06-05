@@ -211,7 +211,7 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault("AppVersion", "3.5");
+                return AppSettings.GetValueOrDefault("AppVersion", "3.6");
             }
             set
             {
@@ -291,6 +291,43 @@ namespace CGFSMVVM.Helpers
             set
             {
                 AppSettings.AddOrUpdateValue(SAPURL, value);
+            }
+        }
+
+
+        public static string DeviceUUID
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("DeviceUUID", string.Empty);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("DeviceUUID", value);
+            }
+        }
+
+        public static string HotelName
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("HotelName", string.Empty);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("HotelName", value);
+            }
+        }
+
+        public static string IsUUIDregistered
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("IsUUIDregistered", "Device is not registered");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("IsUUIDregistered", value);
             }
         }
 

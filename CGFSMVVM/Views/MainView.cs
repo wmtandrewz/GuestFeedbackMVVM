@@ -23,8 +23,6 @@ namespace CGFSMVVM.Views
         private Button _startButton, _logoutButton;
         private ActivityIndicator _indicator;
 
-		private bool RegistrationCheckLock = false;
-
         MainViewModel _mainViewModel;
 
         public MainView()
@@ -74,10 +72,6 @@ namespace CGFSMVVM.Views
 				HorizontalOptions = LayoutOptions.End
 			};
 
-			_logoutButton.Clicked += async delegate
-			{
-				 new UserLogout().logout();
-			};
 
 			_toolBarLayout.Children.Add(_logoutButton);
 			_toolBarLayout.Children.Add(_settingsIcon);
@@ -207,7 +201,9 @@ namespace CGFSMVVM.Views
 			}
 			else
 			{
-				new UserLogout().logout();
+                await Navigation.PushAsync(new SystemConfigView());
+
+                Navigation.RemovePage(this);
 			}
 
         }

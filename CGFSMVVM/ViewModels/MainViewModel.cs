@@ -52,7 +52,7 @@ namespace CGFSMVVM.ViewModels
             if(string.IsNullOrEmpty(Settings.BaseDomainURL))
             {
                 await Application.Current.MainPage.DisplayAlert("Gateway Unavailable", "Please set App configurations", "OK").ConfigureAwait(true);
-				new UserLogout().logout();
+				//new UserLogout().logout();
             }
         }
 
@@ -69,7 +69,7 @@ namespace CGFSMVVM.ViewModels
 
         private void SetingsButtonTapped()
         {
-            //_navigation.PushAsync(new AutoConfigView());
+            _navigation.PushAsync(new SystemConfigView());
         }
 
         private async void StartButtonClicked()

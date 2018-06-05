@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CGFSMVVM.DataParsers;
-using CGFSMVVM.iOS;
+using CGFSMVVM.Helpers;
+using CGFSMVVM.Models;
 using CGFSMVVM.Services;
 using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace CGFSMVVM.ViewModels
@@ -60,11 +64,63 @@ namespace CGFSMVVM.ViewModels
         /// <summary>
         /// Clear the feedback data and reloanch the main page the button pressed.
         /// </summary>
-        private void FinishButtonPressed()
+        private async void FinishButtonPressed()
         {
-            FeedbackCart.ClearSavedData();
-            Navigation.PopToRootAsync();
-            //Thread.CurrentThread.Abort();
+            bool isCompleted = await GetDeviceInformation();
+
+            if (isCompleted)
+            {
+                FeedbackCart.ClearSavedData();
+                await Navigation.PopToRootAsync();
+                //Thread.CurrentThread.Abort();
+            }
+            else
+            {
+                FeedbackCart.ClearSavedData();
+                await Navigation.PopToRootAsync();
+            }
+        }
+
+        public async Task<bool> GetDeviceInformation()
+        {
+
+            try
+            {
+                if (!string.IsNullOrEmpty(Settings.DeviceUUID))
+                {
+                    HttpClient client = new HttpClient
+                    {
+                        BaseAddress = new Uri(Settings.ConfigAPIUri)
+                    };
+                    var response = await client.GetAsync($"GFBConfig/GetDeviceInfo/{Settings.DeviceUUID}").ConfigureAwait(true);
+                    var responceDevice = response.Content.ReadAsStringAsync().Result;
+
+                    if (!string.IsNullOrEmpty(responceDevice))
+                    {
+                        DeviceInfoModel deviceInfoModel = JsonConvert.DeserializeObject<DeviceInfoModel>(responceDevice);
+
+                        if (deviceInfoModel != null && deviceInfoModel.IsResgistered == "false")
+                        {
+                            Settings.HotelCode = string.Empty;
+                            Settings.HotelIdentifier = string.Empty;
+                            Settings.HotelName = string.Empty;
+                            Settings.IsUUIDregistered = "Device is not registered";
+
+                            return true;
+
+                        }
+                    }
+                }
+
+                return true;
+
+            }
+
+            catch (Exception)
+            {
+                return true;
+            }
+
         }
     }
 }
