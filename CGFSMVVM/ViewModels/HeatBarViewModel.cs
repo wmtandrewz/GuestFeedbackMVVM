@@ -169,6 +169,10 @@ namespace CGFSMVVM.ViewModels
 
         }
 
+        /// <summary>
+        /// Childs the button tapped.
+        /// </summary>
+        /// <param name="heat_ChildModel">Heat child model.</param>
         private void ChildButtonTapped(Heat_ChildModel heat_ChildModel)
         {
             
