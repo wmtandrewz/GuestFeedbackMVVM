@@ -14,9 +14,11 @@ namespace CGFSMVVM.ViewModels
     public class HeatBarViewModel
     {
         public ICommand HeatBarTappedCommand { get; }
+        public ICommand ChildHeatBarTappedCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand NextCommand { get; }
         public ICommand LoadQuestionCommand { get; }
+        public ICommand LoadChildQuestionCommand { get; }
         public ICommand LoadMessageTextCommand { get; }
         public INavigation _navigation { get; }
 
@@ -29,16 +31,22 @@ namespace CGFSMVVM.ViewModels
         private List<Button> buttonList = new List<Button>();
         private List<Color> _colorList;
         private QuestionsModel _Questions;
+        Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
+        List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
 
 
-        public HeatBarViewModel(INavigation iNavigation,string currQuestionIndex)
+        public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex)
         {
             this._navigation = iNavigation;
             this._currQuestionindex = currQuestionIndex;
 
             this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
+            this.children = QuestionJsonDeserializer.GetChildQuestionSet(_currQuestionindex);
+
 
             LoadButtons();
+
+            LoadChildGlobalList();
 
             _colorList = new List<Color>
             {
@@ -55,9 +63,11 @@ namespace CGFSMVVM.ViewModels
             };
 
             HeatBarTappedCommand = new Command<HeatButtonModel>(ButtonTapped);
+            ChildHeatBarTappedCommand = new Command<Heat_ChildModel>(ChildButtonTapped);
             BackCommand = new Command(BackButtonTapped);
             NextCommand = new Command(NextButtonTapped);
             LoadQuestionCommand = new Command<Label>(LoadData);
+            LoadChildQuestionCommand = new Command<Image>(LoadChildData);
             LoadMessageTextCommand = new Command<Label>(SetMessageText);
 
             RestoreFeedbackData();
@@ -66,6 +76,14 @@ namespace CGFSMVVM.ViewModels
         private void SetMessageText(Label label)
         {
             CommonPropertySetter.SetMessageLabelText(label, _Questions.Optional);
+        }
+
+        private void LoadChildGlobalList()
+        {
+            foreach (var item in GlobalModel.ChildHeatListCollection)
+            {
+                this.childHeatLists.Add(item);
+            }
         }
 
         private void LoadButtons()
@@ -79,6 +97,32 @@ namespace CGFSMVVM.ViewModels
         private void LoadData(Label label)
         {
             CommonPropertySetter.SetQuestionLabelText(label, _Questions.QDesc);
+        }
+
+        private void LoadChildData(Image headerImage)
+        {
+            var childQuestions = GlobalModel.ChildHeatListCollection;
+
+            if (childQuestions.Count > 1)
+            {
+                headerImage.IsVisible = false;
+                int seq = 0;
+
+                foreach (var item in children)
+                {
+
+                    if(item.Value.QType == "L")
+                    {
+                        childQuestions[seq].titleLabel.Text = item.Value.QDesc;
+                    }
+                    else
+                    {
+                        childQuestions[seq].childTitleLabel.Text = item.Value.QDesc;
+                    }
+
+                    seq++;
+                }
+            }
         }
 
         private async void ButtonTapped(HeatButtonModel heatButtonModel)
@@ -121,6 +165,44 @@ namespace CGFSMVVM.ViewModels
                     _tapLocked = false;
                     return false;
                 });
+            }
+
+        }
+
+        private void ChildButtonTapped(Heat_ChildModel heat_ChildModel)
+        {
+            
+            List<Color>_colorListSeconary = new List<Color>
+            {
+                Color.FromRgb(119, 229, 0),
+                Color.FromRgb(140, 160, 12),
+                Color.FromRgb(175, 130, 20),
+                Color.FromRgb(210, 100, 30),
+                Color.FromRgb(240, 60, 40)
+            };
+
+            var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
+
+            //Button animations
+            foreach (var item in currentModel.buttonList)
+            {
+                item.BackgroundColor = Color.White;
+                item.TextColor = Color.Black;
+            }
+
+            int _seq = 4;
+
+            foreach (var item in currentModel.buttonList)
+            {
+                item.BackgroundColor = _colorListSeconary[_seq];
+                item.TextColor = Color.White;
+
+                if (item.Id == heat_ChildModel.ButtonModel.button.Id)
+                {
+                    break;
+                }
+
+                _seq--;
             }
 
         }
@@ -195,7 +277,7 @@ namespace CGFSMVVM.ViewModels
                     item.BackgroundColor = _colorList[_seq];
                     item.TextColor = Color.White;
 
-                    if ((10 -_seq).ToString() == _selectedValue)
+                    if ((10 - _seq).ToString() == _selectedValue)
                     {
                         break;
                     }

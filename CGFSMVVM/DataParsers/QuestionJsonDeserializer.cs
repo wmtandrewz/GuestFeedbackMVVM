@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CGFSMVVM.Helpers;
 using CGFSMVVM.Models;
@@ -20,6 +21,8 @@ namespace CGFSMVVM.DataParsers
 
         private static List<string> QuestionNumberList = new List<string>();
 
+        private static Dictionary <string, Dictionary<string,QuestionsModel>> ChildQuestionDictionary = new Dictionary <string, Dictionary<string, QuestionsModel>>();
+
         /// <summary>
         /// Deserializes the questions.
         /// </summary>
@@ -31,7 +34,7 @@ namespace CGFSMVVM.DataParsers
 
 			if (!string.IsNullOrEmpty(Settings.HotelIdentifier))
 			{
-				string _result = await APIGetServices.GetQuestionsFromAPI(Settings.HotelIdentifier, "en-US", "GC").ConfigureAwait(true);
+				string _result = await APIGetServices.GetQuestionsFromAPI(Settings.HotelIdentifier, "en-US","GC").ConfigureAwait(true);
 
 				FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
 
@@ -46,6 +49,8 @@ namespace CGFSMVVM.DataParsers
 						FeedbackCart._mainCatId = Convert.ToInt32(item.MainCategory);
 					}
 
+                    FilterChildQuestions();
+
 					return true;
 				}
 			}
@@ -58,11 +63,56 @@ namespace CGFSMVVM.DataParsers
 
 		}
 
-		/// <summary>
-		/// Gets the question by index number.
-		/// </summary>
-		/// <returns>The question. <see cref="T:CGFSMVVM.Models.Questions"/> class</returns>
-		/// <param name="index">Index of required question</param>
+        /// <summary>
+        /// Filters the child questions.
+        /// </summary>
+        private static void FilterChildQuestions()
+        {
+            try
+            {
+                var lastVal = HotelQuestionDictionary.Values.Last();
+                int lastPageId = Convert.ToInt32(lastVal.PageId);
+
+                for (int i = 1; i <= lastPageId; i++)
+                {
+                    var res = HotelQuestionDictionary.Where(x => Convert.ToInt32(x.Value.PageId) == i).ToDictionary(x => x.Key, x => x.Value);
+
+
+                    if (res.Values.Count > 1)
+                    {
+                        
+                        var indexObj = res.First();
+
+                        ChildQuestionDictionary.Add(indexObj.Value.QNo, res);
+
+                        foreach (var item in res.Values)
+                        {
+                            if (item != res.Values.First())
+                            {
+                                QuestionNumberList.Remove(item.QNo);
+                            }
+                        }
+
+                        if (res.First().Value.ParentQNo == null)
+                        {
+                            res.Remove(res.First().Value.QNo);
+                        }
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Filter Questions");
+            }
+
+
+        }
+
+        /// <summary>
+        /// Gets the question by index number.
+        /// </summary>
+        /// <returns>The question. <see cref="T:CGFSMVVM.Models.Questions"/> class</returns>
+        /// <param name="index">Index of required question</param>
         public static QuestionsModel GetQuestion(string index)
         {
             return HotelQuestionDictionary[index];
@@ -186,6 +236,18 @@ namespace CGFSMVVM.DataParsers
             else
             {
                 return 0;
+            }
+        }
+
+        public static Dictionary<string,QuestionsModel> GetChildQuestionSet(string parentQNo)
+        {
+            try
+            {
+                return ChildQuestionDictionary[parentQNo];
+            }
+            catch(Exception)
+            {
+                return null;
             }
         }
 

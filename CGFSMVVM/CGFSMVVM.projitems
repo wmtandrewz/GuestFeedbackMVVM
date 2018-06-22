@@ -83,6 +83,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)SystemConfigView.xaml.cs">
       <DependentUpon>SystemConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ComponentHeatBarList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ChildHeatListModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Heat_ChildModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />

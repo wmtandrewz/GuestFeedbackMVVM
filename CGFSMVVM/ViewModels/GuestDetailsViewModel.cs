@@ -341,7 +341,7 @@ namespace CGFSMVVM.ViewModels
 
             if (_nextQuestion.QType == "")
             {
-                if (_nextQuestion.DisplayType == "Slider")
+                if (_nextQuestion.UIControl == "sli")
                 {
                     _navigation.PushAsync(new HeatBarView(_currQuesNo, _nextQuestion.QNo));
                 }

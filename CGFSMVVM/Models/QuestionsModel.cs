@@ -9,17 +9,11 @@ namespace CGFSMVVM.Models
         [JsonProperty("MainCategory")]
         public string MainCategory { get; set; }
 
-        [JsonProperty("CategoryRowId")]
-        public string CategoryRowId { get; set; }
-
-        [JsonProperty("CategoryName")]
-        public string CategoryName { get; set; }
-
         [JsonProperty("ParentId")]
         public string ParentId { get; set; }
 
-        [JsonProperty("bc")]
-        public string bc { get; set; }
+        [JsonProperty("SortOrder")]
+        public string SortOrder { get; set; }
 
         [JsonProperty("QId")]
         public string QId { get; set; }
@@ -48,11 +42,14 @@ namespace CGFSMVVM.Models
         [JsonProperty("UIControl")]
         public string UIControl { get; set; }
 
-        [JsonProperty("DisplayType")]
-        public string DisplayType { get; set; }
-
         [JsonProperty("Optional")]
         public bool Optional { get; set; }
+
+        [JsonProperty("ParentQNo")]
+        public string ParentQNo { get; set; }
+
+        [JsonProperty("SubQuestionCriteria")]
+        public string SubQuestionCriteria { get; set; }
 
         [JsonProperty("OtherQuestions")]
         public List<OtherQuestionsModel> OtherQuestions { get; set; }

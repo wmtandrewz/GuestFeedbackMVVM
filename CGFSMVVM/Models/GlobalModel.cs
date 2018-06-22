@@ -48,6 +48,12 @@ namespace CGFSMVVM.Models
             set;
         }
 
+        public static List<ChildHeatListModel> ChildHeatListCollection
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Initializes the <see cref="T:CGFSMVVM.Models.GlobalModel"/> class.
         /// </summary>
@@ -59,6 +65,7 @@ namespace CGFSMVVM.Models
             HeatButonList = new List<Button>();
             DualOptionList = new List<Image>();
             CommentEditor = new Editor();
+            ChildHeatListCollection = new List<ChildHeatListModel>();
             TimeSpan = 0.5;
         }
 
@@ -72,6 +79,7 @@ namespace CGFSMVVM.Models
             MultiSelectionsLabelList.Clear();
             HeatButonList.Clear();
             DualOptionList.Clear();
+            ChildHeatListCollection.Clear();
             CommentEditor = new Editor();
         }
 

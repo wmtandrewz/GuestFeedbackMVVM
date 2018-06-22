@@ -30,6 +30,7 @@ namespace CGFSMVVM.Views
             BindingContext = heatBarViewModel;
 
             heatBarViewModel.LoadQuestionCommand.Execute(_questionLabel);
+            heatBarViewModel.LoadChildQuestionCommand.Execute(_headerImage);
             heatBarViewModel.LoadMessageTextCommand.Execute(_messageLabel);
 
         }
@@ -60,7 +61,7 @@ namespace CGFSMVVM.Views
                 VerticalOptions=LayoutOptions.Center,
                 HorizontalOptions=LayoutOptions.Center,
                 HeightRequest=300,
-                Margin = 20
+                Margin = new Thickness(20,50,20,10)
             };
 
             _baseLayout.Children.Add(_headerImage);
@@ -76,7 +77,11 @@ namespace CGFSMVVM.Views
             ComponentProgressPane cpp = new ComponentProgressPane();
             StackLayout sl3 = cpp.GetProgressPane();
 
+            ComponentHeatBarList chbl = new ComponentHeatBarList();
+            StackLayout sl2_1 = chbl.GetHeatBarListLayout(_currQuesIndex);
+
             _baseLayout.Children.Add(sl);
+            _baseLayout.Children.Add(sl2_1);
             _baseLayout.Children.Add(sl2);
             _baseLayout.Children.Add(sl3);
 

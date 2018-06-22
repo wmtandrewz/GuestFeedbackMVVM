@@ -141,9 +141,9 @@ namespace CGFSMVVM.ViewModels
 
             }
 
-			if (!string.IsNullOrEmpty(Settings.Username))
+			if (!string.IsNullOrEmpty(Settings.DeviceUUID))
 			{
-                FeedbackCart._createdBy = $"{Settings.Username}";
+                FeedbackCart._createdBy = $"{Settings.DeviceUUID}";
             }
         }
 

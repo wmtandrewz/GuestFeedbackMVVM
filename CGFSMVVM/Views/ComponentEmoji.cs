@@ -48,7 +48,7 @@ namespace CGFSMVVM.Views
 
                 _emojiIcon = new Image { Aspect = Aspect.AspectFit };
                 _emojiIcon.Source = ImageSource.FromFile(emojiList[i]);
-                _emojiIcon.WidthRequest = 100;
+                _emojiIcon.WidthRequest = 80;
 
                 GlobalModel.EmojiDescLabelList.Add(_emojiDescLabel);
                 GlobalModel.EmojiIconList.Add(_emojiIcon);

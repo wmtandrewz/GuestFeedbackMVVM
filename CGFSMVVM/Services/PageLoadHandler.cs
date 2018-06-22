@@ -34,7 +34,7 @@ namespace CGFSMVVM.Services
                 /// else if (If there is dependant Quesion) curent question object DependantQValue contains current dependant value, loads the dependant question
                 /// else skip dependant quesion
                 /// </summary>
-                if (currQuestion.DependantQNo == "")
+                if (currQuestion.DependantQNo == null)
                 {
                     _nextQuestion = QuestionJsonDeserializer.GetNextQuestion(_currQuestionindex);
                 }
@@ -66,8 +66,8 @@ namespace CGFSMVVM.Services
         {
             switch (_nextQuestion.QType)
             {
-                case "":
-                    if (_nextQuestion.DisplayType == "Slider")
+                case null:
+                    if (_nextQuestion.UIControl == "sli")
                     {
                         _navigation.PushAsync(new HeatBarView(_currQuestionindex, _nextQuestion.QNo));
                     }
