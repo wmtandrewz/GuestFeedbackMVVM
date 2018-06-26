@@ -123,13 +123,21 @@ namespace CGFSMVVM.DataParsers
 
             for (int i = 0; i < otherQCollection.Count; i++)
             {
-                String _OqJson =
+                Console.WriteLine(otherQCollection.GetKey(i));
+                string[] values = otherQCollection.Get(i).Split(',');
+
+                for (int ii = 0; ii < values.Length; ii++)
+                {
+                    string _OqJson =
                                 "{\"CommID\":0," +
                                 "\"QId\":" + otherQCollection.GetKey(i) + "," +
-                                "\"OQID\":" + otherQCollection.Get(i) +
+                                "\"OQID\":" + values[ii] +
                                 "}";
+                    otherNVC.Add(otherQCollection.GetKey(i) + "_" + ii.ToString(), _OqJson);
+                }
 
-                otherNVC.Add(otherQCollection.GetKey(i), _OqJson);
+
+
             }
 
             return true;
