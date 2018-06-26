@@ -95,10 +95,8 @@ namespace CGFSMVVM.Services
 
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                var properties = new Dictionary<string, string> { { "Hotel Code", hotelCode }, { "Reservation Number", resNo } };
-                Crashes.TrackError(exception, properties);
 
                 return false;
             }

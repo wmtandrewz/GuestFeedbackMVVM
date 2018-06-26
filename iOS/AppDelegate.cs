@@ -3,6 +3,7 @@ using Foundation;
 using KeyboardOverlap.Forms.Plugin.iOSUnified;
 using UIKit;
 using UserNotifications;
+using Xamarin.Forms;
 
 namespace CGFSMVVM.iOS
 {
@@ -19,7 +20,6 @@ namespace CGFSMVVM.iOS
 
             return base.FinishedLaunching(uiApplication, launchOptions);
         }
-
 
     }
 }

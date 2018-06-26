@@ -110,8 +110,6 @@ namespace CGFSMVVM.ViewModels
 			catch (Exception ex)
 			{
                 Debug.WriteLine("App version failed");
-				Analytics.TrackEvent($"MainViewModel.CheckApp Version {ex.Message}");
-				Crashes.TrackError(ex);
 			}
 
 		}

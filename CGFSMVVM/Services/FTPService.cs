@@ -84,8 +84,6 @@ namespace CGFSMVVM.Services
             }
             catch(Exception ex)
             {
-                var properties = new Dictionary<string, string> { { "Hotel Code", hotelCode }, { "Reservation Number", resNo } };
-                Crashes.TrackError(ex, properties);
                 Console.WriteLine("Error uploading image"+ ex.StackTrace);
             }
         }
@@ -111,8 +109,6 @@ namespace CGFSMVVM.Services
             }
             catch (Exception ex)
             {
-                Crashes.TrackError(ex);
-
                 Console.WriteLine("Error uploading image" + ex.StackTrace);
             }
         }

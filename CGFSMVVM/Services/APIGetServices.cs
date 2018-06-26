@@ -73,11 +73,11 @@ namespace CGFSMVVM.Services
             try
             {
                 HttpClient client = new HttpClient();
-                //client.BaseAddress = new Uri(Settings.BaseDomainURL);
+                client.BaseAddress = new Uri(Settings.BaseDomainURL);
                 //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Settings.SubscriptionKey);
-                client.BaseAddress = new Uri("https://cheetah.azure-api.net/api/v1/");
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "c96b7f401241458290ce8544207eb43d"); //Production link
-                var response = await client.GetAsync("guestfeedback/Guest/GetGuestDetails/" + hotelNumber + "/" + roomNo + "/" + date);
+                //client.BaseAddress = new Uri("https://cheetah.azure-api.net/api/v1/");
+                //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "c96b7f401241458290ce8544207eb43d"); //Production link
+                var response = await client.GetAsync("Guest/GetGuestDetails/" + hotelNumber + "/" + roomNo + "/" + date);
 
                 var resultData = response.Content.ReadAsStringAsync().Result;
 
@@ -92,10 +92,8 @@ namespace CGFSMVVM.Services
                     return "";
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                var properties = new Dictionary<string, string> { { "Hotel Number", hotelNumber }, { "Room", roomNo }, { "Date", date } };
-                Crashes.TrackError(exception, properties);
                 return "";
             }
         }
@@ -115,11 +113,11 @@ namespace CGFSMVVM.Services
             {
 
                 HttpClient client = new HttpClient();
-                //client.BaseAddress = new Uri(Settings.BaseDomainURL);
+                client.BaseAddress = new Uri(Settings.BaseDomainURL);
                 //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Settings.SubscriptionKey);
-                client.BaseAddress = new Uri("https://cheetah.azure-api.net/api/v1/");
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "c96b7f401241458290ce8544207eb43d");
-                var response = await client.GetAsync("guestfeedback/Feedback/IsFeedbackGiven/" + hotelCode + "/" + resNo + "/" + guestID).ConfigureAwait(true);
+                //client.BaseAddress = new Uri("https://cheetah.azure-api.net/api/v1/");
+                //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "c96b7f401241458290ce8544207eb43d");
+                var response = await client.GetAsync("Feedback/IsFeedbackGiven/" + hotelCode + "/" + resNo + "/" + guestID).ConfigureAwait(true);
                 resultData = response.Content.ReadAsStringAsync().Result;
 
                 if (resultData != "")
@@ -133,10 +131,8 @@ namespace CGFSMVVM.Services
                     return resultData;
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                var properties = new Dictionary<string, string> { { "Hotel Code", hotelCode }, { "Reservation Number", resNo }, { "Guest", guestID } };
-                Crashes.TrackError(exception, properties);
                 return resultData;
             }
         }

@@ -8,7 +8,7 @@ namespace CGFSMVVM.Views
     public class HeatBarView : ContentPage
     {
 
-        private StackLayout _baseLayout;
+        private StackLayout _baseLayout, _childLayout;
         private Image _headerImage;
         private Label _questionLabel,_messageLabel;
 
@@ -26,7 +26,7 @@ namespace CGFSMVVM.Views
 
             NavigationPage.SetHasNavigationBar(this, false);
 
-            heatBarViewModel = new HeatBarViewModel(Navigation, currQuesIndex);
+            heatBarViewModel = new HeatBarViewModel(Navigation, currQuesIndex, _childLayout, _headerImage);
             BindingContext = heatBarViewModel;
 
             heatBarViewModel.LoadQuestionCommand.Execute(_questionLabel);
@@ -78,10 +78,11 @@ namespace CGFSMVVM.Views
             StackLayout sl3 = cpp.GetProgressPane();
 
             ComponentHeatBarList chbl = new ComponentHeatBarList();
-            StackLayout sl2_1 = chbl.GetHeatBarListLayout(_currQuesIndex);
+            _childLayout = chbl.GetHeatBarListLayout(_currQuesIndex);
+            _childLayout.IsVisible = false;
 
             _baseLayout.Children.Add(sl);
-            _baseLayout.Children.Add(sl2_1);
+            _baseLayout.Children.Add(_childLayout);
             _baseLayout.Children.Add(sl2);
             _baseLayout.Children.Add(sl3);
 

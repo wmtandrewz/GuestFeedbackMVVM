@@ -8,7 +8,7 @@ namespace CGFSMVVM.Views
     public class EmojiRatingView : ContentPage
     {
 
-        private StackLayout _baseLayout;
+        private StackLayout _baseLayout,_childLayout;
         private Image _headerImage;
         private Label _questionLabel,_messageLabel;
 
@@ -26,10 +26,11 @@ namespace CGFSMVVM.Views
 
             NavigationPage.SetHasNavigationBar(this,false);
 
-            emojiRatingViewModel = new EmojiRatingViewModel(Navigation,currQuesIndex);
+            emojiRatingViewModel = new EmojiRatingViewModel(Navigation,currQuesIndex,_childLayout,_headerImage);
             BindingContext = emojiRatingViewModel;
 
             emojiRatingViewModel.LoadQuestionCommand.Execute(_questionLabel);
+            emojiRatingViewModel.LoadChildQuestionCommand.Execute(_headerImage);
             emojiRatingViewModel.LoadMessageTextCommand.Execute(_messageLabel);
 
         }
@@ -94,7 +95,12 @@ namespace CGFSMVVM.Views
             ComponentProgressPane cpp = new ComponentProgressPane();
             StackLayout sl3 = cpp.GetProgressPane();
 
+            ComponentHeatBarList chbl = new ComponentHeatBarList();
+            _childLayout = chbl.GetHeatBarListLayout(_currQuesIndex);
+            _childLayout.IsVisible = false;
+
             _baseLayout.Children.Add(sl);
+            _baseLayout.Children.Add(_childLayout);
             _baseLayout.Children.Add(sl2);
             _baseLayout.Children.Add(sl3);
 

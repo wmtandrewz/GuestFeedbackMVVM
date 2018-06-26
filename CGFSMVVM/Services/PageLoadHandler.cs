@@ -27,25 +27,30 @@ namespace CGFSMVVM.Services
 
             try
             {
-                QuestionsModel currQuestion = QuestionJsonDeserializer.GetQuestion(_currQuestionindex);
+                //QuestionsModel currQuestion = QuestionJsonDeserializer.GetQuestion(_currQuestionindex);
 
-                ///<summary>
-                /// If curent question object dependantQNo is empty loads the next page sequently
-                /// else if (If there is dependant Quesion) curent question object DependantQValue contains current dependant value, loads the dependant question
-                /// else skip dependant quesion
-                /// </summary>
-                if (currQuestion.DependantQNo == null)
-                {
-                    _nextQuestion = QuestionJsonDeserializer.GetNextQuestion(_currQuestionindex);
-                }
-                else if (currQuestion.DependantQValue.Contains(_selectedValue))
-                {
-                    _nextQuestion = QuestionJsonDeserializer.GetQuestion(currQuestion.DependantQNo);
-                }
-                else
-                {
-                    _nextQuestion = QuestionJsonDeserializer.SkipDependantQuestion(_currQuestionindex);
-                }
+                /////<summary>
+                ///// If curent question object dependantQNo is empty loads the next page sequently
+                ///// else if (If there is dependant Quesion) curent question object DependantQValue contains current dependant value, loads the dependant question
+                ///// else skip dependant quesion
+                ///// </summary>
+                //if (currQuestion.DependantQNo == null)
+                //{
+                //    _nextQuestion = QuestionJsonDeserializer.GetNextQuestion(_currQuestionindex);
+                //}
+                //else if (currQuestion.DependantQValue.Contains(_selectedValue))
+                //{
+                //    _nextQuestion = QuestionJsonDeserializer.GetQuestion(currQuestion.DependantQNo);
+                //}
+                //else
+                //{
+                //    _nextQuestion = QuestionJsonDeserializer.SkipDependantQuestion(_currQuestionindex);
+                //}
+
+                //=====
+                _nextQuestion = HandleDependancyQuestions(_currQuestionindex);
+
+                //=======
 
 
                 LoadPage(_navigation, _currQuestionindex);
@@ -55,6 +60,77 @@ namespace CGFSMVVM.Services
                 _navigation.PushAsync(new NewsLetterView());
             }
 
+        }
+
+
+        private static QuestionsModel HandleDependancyQuestions(string currQIndex)
+        {
+            try
+            {
+                QuestionsModel currQuestion = QuestionJsonDeserializer.GetQuestion(currQIndex);
+                QuestionsModel nextQuestion = QuestionJsonDeserializer.GetNextQuestion(currQIndex);
+
+                var dependancyQNo = nextQuestion.DependantQNo;
+
+                if(string.IsNullOrEmpty(dependancyQNo))
+                {
+                    return QuestionJsonDeserializer.GetNextQuestion(currQIndex);
+                }
+
+                QuestionsModel dependantParent = QuestionJsonDeserializer.GetQuestion(dependancyQNo);
+
+                var dependancyQid = dependantParent.QId;
+                var dependancyCriteria = nextQuestion.DependantQValue;
+                var dependancyQType = dependantParent.QType;
+                var dependancyQuestionRating = string.Empty;
+
+                if (dependancyQType == null)
+                {
+                    dependancyQuestionRating = FeedbackCart.RatingNVC[dependancyQid];
+                }
+                else if (dependancyQType == "O")
+                {
+                    dependancyQuestionRating = FeedbackCart.OtherNVC[dependancyQid];
+                }
+
+                if(string.IsNullOrEmpty(dependancyQuestionRating))
+                {
+                    var afterSkippedQuestion = QuestionJsonDeserializer.SkipDependantQuestion(currQIndex);
+
+                    if (afterSkippedQuestion.DependantQNo != null)
+                    {
+                        return HandleDependancyQuestions(nextQuestion.QNo);
+                    }
+                    else
+                    {
+                        return afterSkippedQuestion;
+                    }
+                }
+
+
+
+                if (dependancyCriteria.Contains(dependancyQuestionRating) || dependancyQuestionRating.Contains(dependancyCriteria))
+                {
+                    return QuestionJsonDeserializer.GetNextQuestion(currQIndex);
+                }
+                else
+                {
+                    var afterSkippedQuestion = QuestionJsonDeserializer.SkipDependantQuestion(currQIndex);
+
+                    if (afterSkippedQuestion.DependantQNo != null)
+                    {
+                        return HandleDependancyQuestions(nextQuestion.QNo);
+                    }
+                    else
+                    {
+                        return afterSkippedQuestion;
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                return QuestionJsonDeserializer.SkipDependantQuestion(currQIndex);
+            }
         }
 
         /// <summary>

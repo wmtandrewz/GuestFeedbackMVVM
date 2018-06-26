@@ -80,9 +80,8 @@ namespace CGFSMVVM.DataParsers
 
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Crashes.TrackError(ex);
                 return null;
             }
         }
@@ -189,9 +188,8 @@ namespace CGFSMVVM.DataParsers
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Crashes.TrackError(ex);
                 return false;
             }
 

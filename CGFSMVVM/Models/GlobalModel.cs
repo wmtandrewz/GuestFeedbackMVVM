@@ -24,10 +24,10 @@ namespace CGFSMVVM.Models
             get;
             set;
         }
-        public static List<Label> MultiSelectionsLabelList 
-        { 
-            get; 
-            set; 
+        public static List<Label> MultiSelectionsLabelList
+        {
+            get;
+            set;
         }
 
         public static List<Button> HeatButonList
@@ -57,7 +57,8 @@ namespace CGFSMVVM.Models
         /// <summary>
         /// Initializes the <see cref="T:CGFSMVVM.Models.GlobalModel"/> class.
         /// </summary>
-        static GlobalModel(){
+        static GlobalModel()
+        {
             EmojiIconList = new List<Image>();
             EmojiDescLabelList = new List<Label>();
             MultiOptionsLabelList = new List<Label>();
@@ -72,7 +73,8 @@ namespace CGFSMVVM.Models
         /// <summary>
         /// Cleans the global model.
         /// </summary>
-        public static void CleanGlobalModel(){
+        public static void CleanGlobalModel()
+        {
             EmojiIconList.Clear();
             EmojiDescLabelList.Clear();
             MultiOptionsLabelList.Clear();
@@ -91,5 +93,34 @@ namespace CGFSMVVM.Models
         {
             get;
         }
+
+        /// <summary>
+        /// The color list seconary.
+        /// </summary>
+        public static List<Color> ColorListSeconary = new List<Color>
+        {
+            Color.FromRgb(119, 229, 0),
+            Color.FromRgb(140, 160, 12),
+            Color.FromRgb(175, 130, 20),
+            Color.FromRgb(210, 100, 30),
+            Color.FromRgb(240, 60, 40)
+        };
+
+        /// <summary>
+        /// The color list.
+        /// </summary>
+        public static List<Color> ColorList = new List<Color>
+        {
+            Color.FromRgb(119, 229, 0),
+            Color.FromRgb(126, 206, 4),
+            Color.FromRgb(133, 183, 8),
+            Color.FromRgb(140, 160, 12),
+            Color.FromRgb(157, 147, 16),
+            Color.FromRgb(175, 130, 20),
+            Color.FromRgb(190, 117, 25),
+            Color.FromRgb(210, 100, 30),
+            Color.FromRgb(220, 85, 35),
+            Color.FromRgb(240, 60, 40)
+        };
     }
 }

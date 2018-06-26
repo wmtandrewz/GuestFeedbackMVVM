@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using CGFSMVVM.Helpers;
 using CGFSMVVM.Models;
 using CGFSMVVM.Views;
@@ -7,6 +8,8 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Plugin.Connectivity;
 using Plugin.Connectivity.Abstractions;
+using Plugin.DeviceOrientation;
+using Plugin.DeviceOrientation.Abstractions;
 using Xamarin.Forms;
 
 namespace CGFSMVVM
@@ -27,7 +30,6 @@ namespace CGFSMVVM
 
             CrossConnectivity.Current.ConnectivityChanged += Current_ConnectivityChanged;
 
-
 			_navigationPage = new NavigationPage(new MainView())
             {
                 BackgroundColor = Color.Black,
@@ -45,7 +47,7 @@ namespace CGFSMVVM
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Connectivity Change Event args</param>
-		private async void Current_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        private async void Current_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             if (!e.IsConnected)
             {
@@ -59,7 +61,8 @@ namespace CGFSMVVM
         /// </summary>
         protected override void OnStart()
 		{
-            AppCenter.Start("ios=ce6ec43d-b49e-4cc8-a58e-fdb2a99065d9;", typeof(Analytics), typeof(Crashes));
+            //AppCenter.Start("ios=ce6ec43d-b49e-4cc8-a58e-fdb2a99065d9;", typeof(Analytics), typeof(Crashes));
+
             base.OnStart();
 		}
 

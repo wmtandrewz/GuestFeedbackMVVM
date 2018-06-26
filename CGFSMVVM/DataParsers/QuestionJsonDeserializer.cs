@@ -30,6 +30,7 @@ namespace CGFSMVVM.DataParsers
         public static async Task<bool> DeserializeQuestions()
         {
             HotelQuestionDictionary.Clear();
+            ChildQuestionDictionary.Clear();
             QuestionNumberList.Clear();
 
 			if (!string.IsNullOrEmpty(Settings.HotelIdentifier))
@@ -56,7 +57,6 @@ namespace CGFSMVVM.DataParsers
 			}
 			else
 			{
-				Analytics.TrackEvent($"QuestionJsonDeserializer.DeserializeQuestions has no hotelCode");
 				return false;
 			}
 			return false;

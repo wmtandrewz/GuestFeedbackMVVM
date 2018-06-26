@@ -64,9 +64,8 @@ namespace CGFSMVVM.iOS.Streaming
 
                 }
             }
-            catch(Exception exception)
+            catch(Exception)
             {
-                Crashes.TrackError(exception);
             }
         }
 

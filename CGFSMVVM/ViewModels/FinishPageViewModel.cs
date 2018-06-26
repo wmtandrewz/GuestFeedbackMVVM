@@ -55,9 +55,8 @@ namespace CGFSMVVM.ViewModels
                     button.IsEnabled = true;
                 }
             }
-            catch(Exception exception)
+            catch(Exception)
             {
-                Crashes.TrackError(exception);
             }
         }
 

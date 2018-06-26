@@ -148,7 +148,7 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault("ConfigAPIUri", "http://chml.keells.lk/FeedbackAPI/api/");
+                return AppSettings.GetValueOrDefault("ConfigAPIUri", "http://chml.keells.lk/GuestFBAPIDev/api/");
             }
             set
             {
@@ -164,7 +164,7 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault("FTPUri", "http://chml.keells.lk/FeedbackAPI/api/");
+                return AppSettings.GetValueOrDefault("FTPUri", "http://chml.keells.lk/GuestFBAPIDev/api/");
             }
             set
             {

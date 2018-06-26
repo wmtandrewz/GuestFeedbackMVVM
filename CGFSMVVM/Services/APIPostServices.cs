@@ -29,10 +29,10 @@ namespace CGFSMVVM.Services
                     bool responce = false;
 
                     client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    client.Headers.Add("Ocp-Apim-Subscription-Key", Settings.SubscriptionKey);
+                    //client.Headers.Add("Ocp-Apim-Subscription-Key", Settings.SubscriptionKey);
                     //client.Headers.Add("Ocp-Apim-Subscription-Key","d0fbb5e7bebc454e8df6ff295fa73905");
 
-                    string apiResponce = await client.UploadStringTaskAsync(new Uri(Settings.BaseDomainURL + "guestfeedback/Feedback/Insert"), "POST", json);//Live
+                    string apiResponce = await client.UploadStringTaskAsync(new Uri(Settings.BaseDomainURL + "Feedback/Insert"), "POST", json);//Live
                     //client.UploadStringAsync(new Uri("https://jkhapimdev.azure-api.net/api/beta/v1/" + "guestfeedback/Feedback/Insert"), "POST", json);
                     Console.WriteLine(apiResponce);
 
@@ -54,10 +54,9 @@ namespace CGFSMVVM.Services
                     return responce;
 
                 }
-                catch (Exception exception) 
+                catch (Exception) 
                 {
                     FeedbackSerializer.ResetRatingNVCs();
-                    Crashes.TrackError(exception);
                     return false;
                 }
 

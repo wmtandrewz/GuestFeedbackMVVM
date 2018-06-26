@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CGFSMVVM.DataParsers;
@@ -15,7 +17,9 @@ namespace CGFSMVVM.ViewModels
     public class EmojiRatingViewModel
     {
         public ICommand TappedCommand { get; }
+        public ICommand ChildHeatBarTappedCommand { get; }
         public ICommand LoadQuestionCommand { get; }
+        public ICommand LoadChildQuestionCommand { get; }
         public ICommand LoadMessageTextCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand NextCommand { get; }
@@ -24,10 +28,16 @@ namespace CGFSMVVM.ViewModels
         private string _currQuestionindex { get; }
         private string _selectedValue;
         private bool _nextHasPreviousFeedback = false;
-        private List<Image> emojiIconList = new List<Image>();
-        private List<Label> emojiLabelList = new List<Label>();
         private bool _tapLocked = false;
         private bool _canLoadNext = true;
+        private bool _autofoward = false;
+
+        private StackLayout _childLayout;
+        private Image _headerImage;
+        private List<Image> emojiIconList = new List<Image>();
+        private List<Label> emojiLabelList = new List<Label>();
+        Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
+        List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
 
 
         private QuestionsModel _Questions;
@@ -37,23 +47,64 @@ namespace CGFSMVVM.ViewModels
         /// </summary>
         /// <param name="iNavigation">I navigation.</param>
         /// <param name="currQuestionIndex">Curr question index.</param>
-        public EmojiRatingViewModel(INavigation iNavigation, string currQuestionIndex)
+        public EmojiRatingViewModel(INavigation iNavigation, string currQuestionIndex,StackLayout childLayout, Image headerImage)
         {
             this._navigation = iNavigation;
             this._currQuestionindex = currQuestionIndex;
+            this._childLayout = childLayout;
+            this._headerImage = headerImage;
 
             this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
+            this.children = QuestionJsonDeserializer.GetChildQuestionSet(_currQuestionindex);
 
             LoadEmojis();
 
+            SetChildVisibility("All");
+
+            LoadChildGlobalList();
+
             TappedCommand = new Command<EmojiIconModel>(async (emojiIconModel) => await EmojiTapped(emojiIconModel).ConfigureAwait(true));
+            ChildHeatBarTappedCommand = new Command<Heat_ChildModel>(ChildButtonTapped);
             LoadQuestionCommand = new Command<Label>(LoadData);
             LoadMessageTextCommand = new Command<Label>(SetMessageText);
-
+            LoadChildQuestionCommand = new Command<Image>(LoadChildData);
             BackCommand = new Command(BackButtonTapped);
             NextCommand = new Command(NextButtonTapped);
 
             RestoreFeedbackData();
+            RestoreChildFeedbackData();
+        }
+
+        private void SetChildVisibility(string criteria)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(criteria))
+                {
+                    if (_Questions.SubQuestionCriteria == criteria || _Questions.SubQuestionCriteria.Contains(criteria))
+                    {
+                        _childLayout.IsVisible = true;
+                        _headerImage.IsVisible = false;
+                        _autofoward = false;
+                    }
+                    else
+                    {
+                        _childLayout.IsVisible = false;
+                        _autofoward = true;
+                    }
+                }
+                else
+                {
+                    _childLayout.IsVisible = false;
+                    _autofoward = true;
+
+                }
+            }
+            catch (Exception)
+            {
+                _autofoward = true;
+                Console.WriteLine("SetChildVisibility failed");
+            }
         }
 
         /// <summary>
@@ -81,6 +132,14 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        private void LoadChildGlobalList()
+        {
+            foreach (var item in GlobalModel.ChildHeatListCollection)
+            {
+                this.childHeatLists.Add(item);
+            }
+        }
+
         /// <summary>
         /// Loads the Question.
         /// </summary>
@@ -88,6 +147,41 @@ namespace CGFSMVVM.ViewModels
         private void LoadData(Label label)
         {
             CommonPropertySetter.SetQuestionLabelText(label, _Questions.QDesc);
+        }
+
+        private void LoadChildData(Image headerImage)
+        {
+            try
+            {
+                var childQuestions = GlobalModel.ChildHeatListCollection;
+
+                if (childQuestions.Count > 1)
+                {
+                    headerImage.IsVisible = false;
+
+                    int seq = 0;
+
+                    foreach (var item in children)
+                    {
+
+                        if (item.Value.QType == "L")
+                        {
+                            childQuestions[seq].titleLabel.Text = item.Value.QDesc;
+                            seq--;
+                        }
+                        else
+                        {
+                            childQuestions[seq].childTitleLabel.Text = item.Value.QDesc;
+                        }
+
+                        seq++;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         /// <summary>
@@ -138,14 +232,67 @@ namespace CGFSMVVM.ViewModels
                 await emojiIconModel.EmojiIcon.ScaleTo(2, 150);
                 await emojiIconModel.EmojiIcon.ScaleTo(1, 150);
 
+              
+                //Check Criterias
+
+                var subCriteria = _Questions.SubQuestionCriteria;
+                if (!string.IsNullOrEmpty(subCriteria) && subCriteria != "All")
+                {
+                    if (subCriteria.Contains(_selectedValue))
+                    {
+                        SetChildVisibility(_selectedValue);
+                    }
+                    else
+                    {
+                        _childLayout.IsVisible = false;
+                        _headerImage.IsVisible = true;
+                        _autofoward = true;
+                    }
+                }
+
                 Device.StartTimer(TimeSpan.FromSeconds(GlobalModel.TimeSpan), () =>
                 {
-                    LoadNextPage();
+                    if (_autofoward)
+                    {
+                        LoadNextPage();
+                    }
                     _tapLocked = false;
+                    _canLoadNext = true;
                     return false;
                 });
             }
         }
+
+        private void ChildButtonTapped(Heat_ChildModel heat_ChildModel)
+        {
+            Debug.WriteLine(heat_ChildModel.ItemID + " : " + heat_ChildModel.ButtonModel.ID);
+
+            var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
+
+            //Button animations
+            foreach (var item in currentModel.buttonList)
+            {
+                item.BackgroundColor = Color.White;
+                item.TextColor = Color.Black;
+            }
+
+            int _seq = 4;
+
+            foreach (var item in currentModel.buttonList)
+            {
+                item.BackgroundColor = GlobalModel.ColorListSeconary[_seq];
+                item.TextColor = Color.White;
+
+                if (item.Id == heat_ChildModel.ButtonModel.button.Id)
+                {
+                    break;
+                }
+
+                _seq--;
+            }
+
+        }
+
 
         /// <summary>
         /// Backs the button tapped.
@@ -163,6 +310,15 @@ namespace CGFSMVVM.ViewModels
             if (_canLoadNext)
             {
                 CheckNextHasFeedback();
+
+                bool childFeedbacks = CheckIsGivenFeedbackToChild();
+                bool isChildVisible = _childLayout.IsVisible;
+
+                if (!childFeedbacks && isChildVisible)
+                {
+                    Application.Current.MainPage.DisplayAlert("Attention!", "Please give your feedbacks to continue.", "OK");
+                    return;
+                }
 
                 if (_Questions.Optional || _nextHasPreviousFeedback)
                 {
@@ -287,6 +443,67 @@ namespace CGFSMVVM.ViewModels
         }
 
         /// <summary>
+        /// Restores the child feedback data.
+        /// </summary>
+        private void RestoreChildFeedbackData()
+        {
+            try
+            {
+                string[] childArray = new string[children.Count];
+
+                int x = 0;
+                foreach (var item in children)
+                {
+                    if (item.Value.QType != "L")
+                    {
+                        childArray[x] = item.Value.QId;
+                        x++;
+                    }
+                }
+
+                int y = 0;
+                foreach (var item in childArray)
+                {
+                    string previousChildRating = FeedbackCart.RatingNVC[item];
+
+                    if (previousChildRating != null)
+                    {
+                        _childLayout.IsVisible = true;// Visible child layout if feedbacks already given
+
+                        //Button animations
+                        var currentModel = childHeatLists[y];
+
+                        foreach (var items in currentModel.buttonList)
+                        {
+                            items.BackgroundColor = Color.White;
+                            items.TextColor = Color.Black;
+                        }
+
+                        int _seqe = 4;
+
+                        foreach (var items in currentModel.buttonList)
+                        {
+                            items.BackgroundColor = GlobalModel.ColorListSeconary[_seqe];
+                            items.TextColor = Color.White;
+
+                            if ((5 - _seqe).ToString() == previousChildRating)
+                            {
+                                break;
+                            }
+
+                            _seqe--;
+                        }
+                    }
+                    y++;
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Child restore ratings failed");
+            }
+        }
+
+        /// <summary>
         /// Checks the next has feedback.
         /// </summary>
         /// <returns><c>true</c>, if next has feedback, <c>false</c> otherwise.</returns>
@@ -311,6 +528,43 @@ namespace CGFSMVVM.ViewModels
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Checks the is given feedback to child.
+        /// </summary>
+        /// <returns><c>true</c>, if is given feedback to child was checked, <c>false</c> otherwise.</returns>
+        private bool CheckIsGivenFeedbackToChild()
+        {
+            try
+            {
+                var childQId = "";
+
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children.ElementAt(0).Value.QType == "L")
+                    {
+                        childQId = children.ElementAt(i + 1).Value.QId;
+                        i++;
+                    }
+                    else
+                    {
+                        childQId = children.ElementAt(i).Value.QId;
+                    }
+
+                    var feedback = FeedbackCart.RatingNVC[childQId];
+
+                    if (string.IsNullOrEmpty(feedback))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
 
 

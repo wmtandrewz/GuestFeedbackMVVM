@@ -84,8 +84,8 @@ namespace CGFSMVVM.ViewModels
         async Task OptionTapped(MultiOpsLabelModel multiOpsModel)
         {
 
-            _selectedValue = multiOpsModel.ID;
-            Console.WriteLine("tapped :" + _selectedValue);
+            //_selectedValue = multiOpsModel.ID;
+            //Console.WriteLine("tapped :" + _selectedValue);
 
             foreach (var item in MultiSelectionsLabelList)
             {
@@ -95,7 +95,8 @@ namespace CGFSMVVM.ViewModels
                     {
                         item.BackgroundColor = Color.Purple;
                     }
-                    else{
+                    else
+                    {
                         item.BackgroundColor = Color.FromRgb(60, 0, 70);
                     }
                 }
@@ -103,6 +104,39 @@ namespace CGFSMVVM.ViewModels
 
             await multiOpsModel.OptionLabel.ScaleTo(2, 150);
             await multiOpsModel.OptionLabel.ScaleTo(1, 150);
+
+            string[] selectedOptionsArray = new string[MultiSelectionsLabelList.Count];
+
+            int x = 0;
+            int loop = 0;
+            foreach (var item in MultiSelectionsLabelList)
+            {
+                if (item.BackgroundColor == Color.Purple)
+                {
+                    selectedOptionsArray[loop] = x.ToString();
+                    loop++;
+                }
+
+                x++;
+            }
+
+            _selectedValue = null;
+
+            foreach (var item in selectedOptionsArray)
+            {
+
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (string.IsNullOrEmpty(_selectedValue))
+                    {
+                        _selectedValue = item;
+                    }
+                    else
+                    {
+                        _selectedValue += "," + item;
+                    }
+                }
+            }
         }
 
         private void BackButtonTapped()
@@ -166,22 +200,28 @@ namespace CGFSMVVM.ViewModels
                 }
 
                 int i = 0;
+                int ii = 0;
 
                 foreach (var item in GlobalModel.MultiSelectionsLabelList)
                 {
-                    if (i.ToString() == SelectedOptionsNVC[i])
+                    if (ii < SelectedOptionsNVC.Count)
                     {
-                        if (item.BackgroundColor == Color.FromRgb(60, 0, 70))
+                        if (i.ToString() == SelectedOptionsNVC[ii])
                         {
-                            item.BackgroundColor = Color.Purple;
-                        }
-                        else
-                        {
-                            item.BackgroundColor = Color.FromRgb(60, 0, 70);
+                            if (item.BackgroundColor == Color.FromRgb(60, 0, 70))
+                            {
+                                item.BackgroundColor = Color.Purple;
+                            }
+                            else
+                            {
+                                item.BackgroundColor = Color.FromRgb(60, 0, 70);
+                            }
+                            ii++;
                         }
                     }
                     i++;
                 }
+
             }
         }
 

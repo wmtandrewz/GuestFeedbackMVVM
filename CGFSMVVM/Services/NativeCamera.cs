@@ -37,10 +37,9 @@ namespace CGFSMVVM.Services
                 cameraStream.SetupLiveCameraStream();
                 cameraStream.SetFrontCam();
             }
-            catch(Exception exception)
+            catch(Exception)
             {
                 //Thread.CurrentThread.Abort();
-                Crashes.TrackError(exception);
             }
         }
 
@@ -62,9 +61,8 @@ namespace CGFSMVVM.Services
 					}
 				}
 			}
-			catch (Exception exception)
+			catch (Exception)
 			{
-				Crashes.TrackError(exception);
             }
 
 

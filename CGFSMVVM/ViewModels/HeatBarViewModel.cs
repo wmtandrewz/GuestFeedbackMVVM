@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CGFSMVVM.DataParsers;
@@ -27,7 +29,10 @@ namespace CGFSMVVM.ViewModels
         private bool _tapLocked = false;
         private bool _canLoadNext = true;
         private bool _nextHasPreviousFeedback = false;
+        private bool _autofoward = false;
 
+        private StackLayout _childLayout;
+        private Image _headerImage;
         private List<Button> buttonList = new List<Button>();
         private List<Color> _colorList;
         private QuestionsModel _Questions;
@@ -35,10 +40,12 @@ namespace CGFSMVVM.ViewModels
         List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
 
 
-        public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex)
+        public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex, StackLayout childLayout, Image headerImage)
         {
             this._navigation = iNavigation;
             this._currQuestionindex = currQuestionIndex;
+            this._childLayout = childLayout;
+            this._headerImage = headerImage;
 
             this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
             this.children = QuestionJsonDeserializer.GetChildQuestionSet(_currQuestionindex);
@@ -46,21 +53,11 @@ namespace CGFSMVVM.ViewModels
 
             LoadButtons();
 
+            SetChildVisibility("All");
+
             LoadChildGlobalList();
 
-            _colorList = new List<Color>
-            {
-                Color.FromRgb(119, 229, 0),
-                Color.FromRgb(126, 206, 4),
-                Color.FromRgb(133, 183, 8),
-                Color.FromRgb(140, 160, 12),
-                Color.FromRgb(157, 147, 16),
-                Color.FromRgb(175, 130, 20),
-                Color.FromRgb(190, 117, 25),
-                Color.FromRgb(210, 100, 30),
-                Color.FromRgb(220, 85, 35),
-                Color.FromRgb(240, 60, 40)
-            };
+            _colorList = GlobalModel.ColorList;
 
             HeatBarTappedCommand = new Command<HeatButtonModel>(ButtonTapped);
             ChildHeatBarTappedCommand = new Command<Heat_ChildModel>(ChildButtonTapped);
@@ -71,13 +68,57 @@ namespace CGFSMVVM.ViewModels
             LoadMessageTextCommand = new Command<Label>(SetMessageText);
 
             RestoreFeedbackData();
+            RestoreChildFeedbackData();
         }
 
+        /// <summary>
+        /// Sets the child layer visibility.
+        /// </summary>
+        /// <param name="criteria">Criteria.</param>
+        private void SetChildVisibility(string criteria)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(criteria))
+                {
+                    if (_Questions.SubQuestionCriteria == criteria || _Questions.SubQuestionCriteria.Contains(criteria))
+                    {
+                        _childLayout.IsVisible = true;
+                        _headerImage.IsVisible = false;
+                        _autofoward = false;
+                    }
+                    else
+                    {
+                        _childLayout.IsVisible = false;
+                        _autofoward = true;
+                    }
+                }
+                else
+                {
+                    _childLayout.IsVisible = false;
+                    _autofoward = true;
+
+                }
+            }
+            catch (Exception)
+            {
+                _autofoward = true;
+                Console.WriteLine("SetChildVisibility failed");
+            }
+        }
+
+        /// <summary>
+        /// Sets the message text.
+        /// </summary>
+        /// <param name="label">Label.</param>
         private void SetMessageText(Label label)
         {
             CommonPropertySetter.SetMessageLabelText(label, _Questions.Optional);
         }
 
+        /// <summary>
+        /// Loads the children from  global list.
+        /// </summary>
         private void LoadChildGlobalList()
         {
             foreach (var item in GlobalModel.ChildHeatListCollection)
@@ -86,6 +127,9 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Loads the buttons fro GLobal model.
+        /// </summary>
         private void LoadButtons()
         {
             foreach (var item in GlobalModel.HeatButonList)
@@ -99,29 +143,39 @@ namespace CGFSMVVM.ViewModels
             CommonPropertySetter.SetQuestionLabelText(label, _Questions.QDesc);
         }
 
+
         private void LoadChildData(Image headerImage)
         {
-            var childQuestions = GlobalModel.ChildHeatListCollection;
-
-            if (childQuestions.Count > 1)
+            try
             {
-                headerImage.IsVisible = false;
-                int seq = 0;
+                var childQuestions = GlobalModel.ChildHeatListCollection;
 
-                foreach (var item in children)
+                if (childQuestions.Count > 1)
                 {
+                    //headerImage.IsVisible = false;
 
-                    if(item.Value.QType == "L")
-                    {
-                        childQuestions[seq].titleLabel.Text = item.Value.QDesc;
-                    }
-                    else
-                    {
-                        childQuestions[seq].childTitleLabel.Text = item.Value.QDesc;
-                    }
+                    int seq = 0;
 
-                    seq++;
+                    foreach (var item in children)
+                    {
+
+                        if (item.Value.QType == "L")
+                        {
+                            childQuestions[seq].titleLabel.Text = item.Value.QDesc;
+                            seq--;
+                        }
+                        else
+                        {
+                            childQuestions[seq].childTitleLabel.Text = item.Value.QDesc;
+                        }
+
+                        seq++;
+                    }
                 }
+            }
+            catch (Exception)
+            {
+
             }
         }
 
@@ -159,12 +213,36 @@ namespace CGFSMVVM.ViewModels
                 await heatButtonModel.button.ScaleTo(2, 150);
                 await heatButtonModel.button.ScaleTo(1, 150);
 
+                //Check Criterias
+
+                var subCriteria = _Questions.SubQuestionCriteria;
+                if (!string.IsNullOrEmpty(subCriteria) && subCriteria != "All")
+                {
+                    if (subCriteria.Contains(_selectedValue))
+                    {
+                        SetChildVisibility(_selectedValue);
+                    }
+                    else
+                    {
+                        _childLayout.IsVisible = false;
+                        _headerImage.IsVisible = true;
+                        _autofoward = true;
+                    }
+                }
+
                 Device.StartTimer(TimeSpan.FromSeconds(GlobalModel.TimeSpan), () =>
                 {
-                    LoadNextPage();
+                    if (_autofoward)
+                    {
+                        LoadNextPage();
+                    }
                     _tapLocked = false;
+                    _canLoadNext = true;
                     return false;
                 });
+
+
+
             }
 
         }
@@ -175,19 +253,31 @@ namespace CGFSMVVM.ViewModels
         /// <param name="heat_ChildModel">Heat child model.</param>
         private void ChildButtonTapped(Heat_ChildModel heat_ChildModel)
         {
-            
-            List<Color>_colorListSeconary = new List<Color>
-            {
-                Color.FromRgb(119, 229, 0),
-                Color.FromRgb(140, 160, 12),
-                Color.FromRgb(175, 130, 20),
-                Color.FromRgb(210, 100, 30),
-                Color.FromRgb(240, 60, 40)
-            };
+            int childRawId = Convert.ToInt32(heat_ChildModel.ItemID);
+            int childColumnId = Convert.ToInt32(heat_ChildModel.ButtonModel.ID);
+            Debug.WriteLine(heat_ChildModel.ItemID + " : " + heat_ChildModel.ButtonModel.ID);
 
-            var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
+            var childQId = "";
+
+            if(children.ElementAt(0).Value.QType == "L")
+            {
+                childQId = children.ElementAt(childRawId + 1).Value.QId;
+            }
+            else
+            {
+                childQId = children.ElementAt(childRawId).Value.QId;
+            }
+
+
+            var childSelectedValue = (Convert.ToInt32(childColumnId) + 1).ToString();
+            Debug.WriteLine(childQId + " : " + childSelectedValue);
+
+            //Add selected ratings to cart
+            AddChildFeedbackToCart(childQId, childSelectedValue);
 
             //Button animations
+            var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
+
             foreach (var item in currentModel.buttonList)
             {
                 item.BackgroundColor = Color.White;
@@ -198,7 +288,7 @@ namespace CGFSMVVM.ViewModels
 
             foreach (var item in currentModel.buttonList)
             {
-                item.BackgroundColor = _colorListSeconary[_seq];
+                item.BackgroundColor = GlobalModel.ColorListSeconary[_seq];
                 item.TextColor = Color.White;
 
                 if (item.Id == heat_ChildModel.ButtonModel.button.Id)
@@ -221,6 +311,15 @@ namespace CGFSMVVM.ViewModels
             if (_canLoadNext)
             {
                 CheckNextHasFeedback();
+
+                bool childFeedbacks = CheckIsGivenFeedbackToChild();
+                bool isChildVisible = _childLayout.IsVisible;
+
+                if(!childFeedbacks && isChildVisible)
+                {
+                    Application.Current.MainPage.DisplayAlert("Attention!", "Please give your feedbacks to continue.", "OK");
+                    return;
+                }
 
                 if (_Questions.Optional || _nextHasPreviousFeedback)
                 {
@@ -260,6 +359,19 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        private void AddChildFeedbackToCart(string childId, string childRatingValue)
+        {
+            if (FeedbackCart.RatingNVC[childId] == null)
+            {
+                FeedbackCart.RatingNVC.Add(childId, childRatingValue);
+            }
+            else
+            {
+                FeedbackCart.RatingNVC.Remove(childId);
+                AddChildFeedbackToCart(childId, childRatingValue);
+            }
+        }
+
         private void RestoreFeedbackData()
         {
             string previousFeedback = FeedbackCart.RatingNVC[_Questions.QId];
@@ -293,6 +405,63 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        private void RestoreChildFeedbackData()
+        {
+            try
+            {
+                string[] childArray = new string[children.Count];
+
+                int x = 0;
+                foreach (var item in children)
+                {
+                    if (item.Value.QType != "L")
+                    {
+                        childArray[x] = item.Value.QId;
+                        x++;
+                    }
+                }
+
+                int y = 0;
+                foreach (var item in childArray)
+                {
+                    string previousChildRating = FeedbackCart.RatingNVC[item];
+
+                    if (previousChildRating != null)
+                    {
+                        _childLayout.IsVisible = true;// Visible child layout if feedbacks already given
+
+                        //Button animations
+                        var currentModel = childHeatLists[y];
+
+                        foreach (var items in currentModel.buttonList)
+                        {   items.BackgroundColor = Color.White;
+                            items.TextColor = Color.Black;
+                        }
+
+                        int _seqe = 4;
+
+                        foreach (var items in currentModel.buttonList)
+                        {
+                            items.BackgroundColor = GlobalModel.ColorListSeconary[_seqe];
+                            items.TextColor = Color.White;
+
+                            if ((5 - _seqe).ToString() == previousChildRating)
+                            {
+                                break;
+                            }
+
+                            _seqe--;
+                        }
+                    }
+                    y++;
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Child restore ratings failed");
+            }
+        }
+
         private bool CheckNextHasFeedback()
         {
             var nextQuestion = QuestionJsonDeserializer.GetNextQuestion(_currQuestionindex);
@@ -314,6 +483,43 @@ namespace CGFSMVVM.ViewModels
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Checks the is given feedback to child.
+        /// </summary>
+        /// <returns><c>true</c>, if is given feedback to child was checked, <c>false</c> otherwise.</returns>
+        private bool CheckIsGivenFeedbackToChild()
+        {
+            try
+            {
+                var childQId = "";
+
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children.ElementAt(0).Value.QType == "L")
+                    {
+                        childQId = children.ElementAt(i + 1).Value.QId;
+                        i++;
+                    }
+                    else
+                    {
+                        childQId = children.ElementAt(i).Value.QId;
+                    }
+
+                    var feedback = FeedbackCart.RatingNVC[childQId];
+
+                    if (string.IsNullOrEmpty(feedback))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch(Exception)
+            {
+                return true;
+            }
         }
 
     }

@@ -38,7 +38,7 @@ namespace CGFSMVVM.Views
                 Orientation = StackOrientation.Vertical,
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.EndAndExpand,
-                Padding = new Thickness(20, 100, 20, 10)
+                Padding = new Thickness(20, 50, 10, 10)
 
             };
 
@@ -58,7 +58,7 @@ namespace CGFSMVVM.Views
                 _heatListLayout = new StackLayout()
                 {
                     Orientation = StackOrientation.Horizontal,
-                    HeightRequest = 50,
+                    HeightRequest = 40,
                     Padding = new Thickness(10, 10, 10, 10),
                     HorizontalOptions = LayoutOptions.EndAndExpand
 
@@ -66,7 +66,6 @@ namespace CGFSMVVM.Views
 
                 _childTitle = new Label()
                 {
-                    Text = "child xxxx xxxxxx xxxx yfytv iyfv vuiviuyv gvouv vyv ygvyg ouv yg ouvv ",
                     HorizontalTextAlignment = TextAlignment.Start,
                     VerticalTextAlignment = TextAlignment.Center,
                     FontSize = 18,
@@ -87,8 +86,8 @@ namespace CGFSMVVM.Views
                         Text = (j + 1).ToString(),
                         TextColor = Color.Black,
                         FontSize = 14,
-                        HeightRequest = 50,
-                        WidthRequest = 50
+                        HeightRequest = 40,
+                        WidthRequest = 40
                     };
 
                     HeatButtonModel _buttonModel = new HeatButtonModel(j.ToString(), _button);
