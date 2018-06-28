@@ -81,6 +81,7 @@ namespace CGFSMVVM.Views
             ComponentNavPane cnp = new ComponentNavPane();
             RelativeLayout sl2 = cnp.GetNavPane();
             _messageLabel = cnp.GetMessageLabel();
+            sl2.VerticalOptions = LayoutOptions.EndAndExpand;
 
             ComponentProgressPane cpp = new ComponentProgressPane();
             StackLayout sl3 = cpp.GetProgressPane();

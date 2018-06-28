@@ -33,7 +33,7 @@ namespace CGFSMVVM.ViewModels
         private bool _autofoward = false;
 
         private StackLayout _childLayout;
-        private Image _headerImage;
+        private ScrollView _scrollView;
         private List<Image> emojiIconList = new List<Image>();
         private List<Label> emojiLabelList = new List<Label>();
         Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
@@ -47,12 +47,12 @@ namespace CGFSMVVM.ViewModels
         /// </summary>
         /// <param name="iNavigation">I navigation.</param>
         /// <param name="currQuestionIndex">Curr question index.</param>
-        public EmojiRatingViewModel(INavigation iNavigation, string currQuestionIndex,StackLayout childLayout, Image headerImage)
+        public EmojiRatingViewModel(INavigation iNavigation, string currQuestionIndex,StackLayout childLayout, ScrollView scrollView)
         {
             this._navigation = iNavigation;
             this._currQuestionindex = currQuestionIndex;
             this._childLayout = childLayout;
-            this._headerImage = headerImage;
+            this._scrollView = scrollView;
 
             this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
             this.children = QuestionJsonDeserializer.GetChildQuestionSet(_currQuestionindex);
@@ -67,7 +67,7 @@ namespace CGFSMVVM.ViewModels
             ChildHeatBarTappedCommand = new Command<Heat_ChildModel>(ChildButtonTapped);
             LoadQuestionCommand = new Command<Label>(LoadData);
             LoadMessageTextCommand = new Command<Label>(SetMessageText);
-            LoadChildQuestionCommand = new Command<Image>(LoadChildData);
+            LoadChildQuestionCommand = new Command(LoadChildData);
             BackCommand = new Command(BackButtonTapped);
             NextCommand = new Command(NextButtonTapped);
 
@@ -84,7 +84,6 @@ namespace CGFSMVVM.ViewModels
                     if (_Questions.SubQuestionCriteria == criteria || _Questions.SubQuestionCriteria.Contains(criteria))
                     {
                         _childLayout.IsVisible = true;
-                        _headerImage.IsVisible = false;
                         _autofoward = false;
                     }
                     else
@@ -149,7 +148,7 @@ namespace CGFSMVVM.ViewModels
             CommonPropertySetter.SetQuestionLabelText(label, _Questions.QDesc);
         }
 
-        private void LoadChildData(Image headerImage)
+        private void LoadChildData()
         {
             try
             {
@@ -157,7 +156,6 @@ namespace CGFSMVVM.ViewModels
 
                 if (childQuestions.Count > 1)
                 {
-                    headerImage.IsVisible = false;
 
                     int seq = 0;
 
@@ -245,7 +243,7 @@ namespace CGFSMVVM.ViewModels
                     else
                     {
                         _childLayout.IsVisible = false;
-                        _headerImage.IsVisible = true;
+                        ResetChildRatingsFromCart();
                         _autofoward = true;
                     }
                 }
@@ -285,6 +283,10 @@ namespace CGFSMVVM.ViewModels
 
                 if (item.Id == heat_ChildModel.ButtonModel.button.Id)
                 {
+                    //Auto scolling
+                    _scrollView.ScrollToAsync(item, ScrollToPosition.Start, true);
+
+                    //ending the button animations when selected is reached
                     break;
                 }
 
@@ -564,6 +566,24 @@ namespace CGFSMVVM.ViewModels
             catch (Exception)
             {
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Resets the child ratings from cart.
+        /// </summary>
+        private void ResetChildRatingsFromCart()
+        {
+            try
+            {
+                foreach (var item in children)
+                {
+                    FeedbackCart.RatingNVC.Remove(item.Value.QId);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Reset Child Exeption");
             }
         }
 

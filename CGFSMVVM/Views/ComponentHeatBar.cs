@@ -16,12 +16,15 @@ namespace CGFSMVVM.Views
             _baseLayout = new StackLayout
             {
                 Orientation = StackOrientation.Vertical,
-                HorizontalOptions = LayoutOptions.Fill
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Start,
+                HeightRequest  = 80
             };
             _imLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Start,
                 HeightRequest = 60
             };
 

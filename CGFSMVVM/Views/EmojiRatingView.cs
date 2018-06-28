@@ -7,7 +7,7 @@ namespace CGFSMVVM.Views
 {
     public class EmojiRatingView : ContentPage
     {
-
+        private ScrollView _scrollView;
         private StackLayout _baseLayout,_childLayout;
         private Image _headerImage;
         private Label _questionLabel,_messageLabel;
@@ -26,11 +26,11 @@ namespace CGFSMVVM.Views
 
             NavigationPage.SetHasNavigationBar(this,false);
 
-            emojiRatingViewModel = new EmojiRatingViewModel(Navigation,currQuesIndex,_childLayout,_headerImage);
+            emojiRatingViewModel = new EmojiRatingViewModel(Navigation,currQuesIndex,_childLayout,_scrollView);
             BindingContext = emojiRatingViewModel;
 
             emojiRatingViewModel.LoadQuestionCommand.Execute(_questionLabel);
-            emojiRatingViewModel.LoadChildQuestionCommand.Execute(_headerImage);
+            emojiRatingViewModel.LoadChildQuestionCommand.Execute(null);
             emojiRatingViewModel.LoadMessageTextCommand.Execute(_messageLabel);
 
         }
@@ -59,8 +59,7 @@ namespace CGFSMVVM.Views
                 TextColor=Color.White,
                 VerticalOptions=LayoutOptions.Center,
                 HorizontalOptions=LayoutOptions.Center,
-                HeightRequest=300,
-                Margin = 20
+                Margin = new Thickness(20, 20, 20, 60)
             };
 
             _baseLayout.Children.Add(_headerImage);
@@ -91,6 +90,7 @@ namespace CGFSMVVM.Views
             ComponentNavPane npv = new ComponentNavPane();
             RelativeLayout sl2 = npv.GetNavPane();
             _messageLabel = npv.GetMessageLabel();
+            sl2.VerticalOptions = LayoutOptions.EndAndExpand;
 
             ComponentProgressPane cpp = new ComponentProgressPane();
             StackLayout sl3 = cpp.GetProgressPane();
@@ -104,7 +104,17 @@ namespace CGFSMVVM.Views
             _baseLayout.Children.Add(sl2);
             _baseLayout.Children.Add(sl3);
 
-            Content = _baseLayout;
+
+            _scrollView = new ScrollView()
+            {
+                Content = _baseLayout,
+                BackgroundColor = Color.Black,
+                VerticalOptions = LayoutOptions.Fill
+            };
+
+
+            Content = _scrollView;
+
         }
 
         protected override void OnAppearing()

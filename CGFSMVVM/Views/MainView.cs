@@ -73,7 +73,7 @@ namespace CGFSMVVM.Views
 			};
 
 
-			_toolBarLayout.Children.Add(_logoutButton);
+			//_toolBarLayout.Children.Add(_logoutButton);
 			_toolBarLayout.Children.Add(_settingsIcon);
 
             TapGestureRecognizer _tapGestureRecognizer = new TapGestureRecognizer();

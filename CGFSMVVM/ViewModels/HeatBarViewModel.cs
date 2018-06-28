@@ -32,7 +32,7 @@ namespace CGFSMVVM.ViewModels
         private bool _autofoward = false;
 
         private StackLayout _childLayout;
-        private Image _headerImage;
+        private ScrollView _scrollView;
         private List<Button> buttonList = new List<Button>();
         private List<Color> _colorList;
         private QuestionsModel _Questions;
@@ -40,12 +40,12 @@ namespace CGFSMVVM.ViewModels
         List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
 
 
-        public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex, StackLayout childLayout, Image headerImage)
+        public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex, StackLayout childLayout, ScrollView scrollView)
         {
             this._navigation = iNavigation;
             this._currQuestionindex = currQuestionIndex;
             this._childLayout = childLayout;
-            this._headerImage = headerImage;
+            this._scrollView = scrollView;
 
             this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
             this.children = QuestionJsonDeserializer.GetChildQuestionSet(_currQuestionindex);
@@ -64,7 +64,7 @@ namespace CGFSMVVM.ViewModels
             BackCommand = new Command(BackButtonTapped);
             NextCommand = new Command(NextButtonTapped);
             LoadQuestionCommand = new Command<Label>(LoadData);
-            LoadChildQuestionCommand = new Command<Image>(LoadChildData);
+            LoadChildQuestionCommand = new Command(LoadChildData);
             LoadMessageTextCommand = new Command<Label>(SetMessageText);
 
             RestoreFeedbackData();
@@ -84,7 +84,6 @@ namespace CGFSMVVM.ViewModels
                     if (_Questions.SubQuestionCriteria == criteria || _Questions.SubQuestionCriteria.Contains(criteria))
                     {
                         _childLayout.IsVisible = true;
-                        _headerImage.IsVisible = false;
                         _autofoward = false;
                     }
                     else
@@ -144,7 +143,7 @@ namespace CGFSMVVM.ViewModels
         }
 
 
-        private void LoadChildData(Image headerImage)
+        private void LoadChildData()
         {
             try
             {
@@ -224,8 +223,9 @@ namespace CGFSMVVM.ViewModels
                     }
                     else
                     {
+                        
                         _childLayout.IsVisible = false;
-                        _headerImage.IsVisible = true;
+                        ResetChildRatingsFromCart();
                         _autofoward = true;
                     }
                 }
@@ -275,9 +275,11 @@ namespace CGFSMVVM.ViewModels
             //Add selected ratings to cart
             AddChildFeedbackToCart(childQId, childSelectedValue);
 
-            //Button animations
+            //current button row list
             var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
 
+
+            //Button animations
             foreach (var item in currentModel.buttonList)
             {
                 item.BackgroundColor = Color.White;
@@ -293,6 +295,10 @@ namespace CGFSMVVM.ViewModels
 
                 if (item.Id == heat_ChildModel.ButtonModel.button.Id)
                 {
+                    //Auto scolling
+                    _scrollView.ScrollToAsync(item, ScrollToPosition.Start, true);
+
+                    //ending the button animations when selected is reached
                     break;
                 }
 
@@ -519,6 +525,24 @@ namespace CGFSMVVM.ViewModels
             catch(Exception)
             {
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Resets the child ratings from cart.
+        /// </summary>
+        private void ResetChildRatingsFromCart()
+        {
+            try
+            {
+                foreach (var item in children)
+                {
+                    FeedbackCart.RatingNVC.Remove(item.Value.QId);
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Reset Child Exeption");
             }
         }
 

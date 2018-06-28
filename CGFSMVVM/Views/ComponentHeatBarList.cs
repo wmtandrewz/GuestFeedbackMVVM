@@ -45,7 +45,7 @@ namespace CGFSMVVM.Views
             _titleLabel = new Label()
             {
                 HorizontalTextAlignment = TextAlignment.Start,
-                FontSize = 22,
+                FontSize = 24,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White
             };
@@ -58,7 +58,7 @@ namespace CGFSMVVM.Views
                 _heatListLayout = new StackLayout()
                 {
                     Orientation = StackOrientation.Horizontal,
-                    HeightRequest = 40,
+                    HeightRequest = 50,
                     Padding = new Thickness(10, 10, 10, 10),
                     HorizontalOptions = LayoutOptions.EndAndExpand
 
@@ -68,7 +68,7 @@ namespace CGFSMVVM.Views
                 {
                     HorizontalTextAlignment = TextAlignment.Start,
                     VerticalTextAlignment = TextAlignment.Center,
-                    FontSize = 18,
+                    FontSize = 20,
                     TextColor = Color.White,
                     WidthRequest = 500
                 };
@@ -86,8 +86,8 @@ namespace CGFSMVVM.Views
                         Text = (j + 1).ToString(),
                         TextColor = Color.Black,
                         FontSize = 14,
-                        HeightRequest = 40,
-                        WidthRequest = 40
+                        HeightRequest = 50,
+                        WidthRequest = 50
                     };
 
                     HeatButtonModel _buttonModel = new HeatButtonModel(j.ToString(), _button);

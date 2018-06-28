@@ -7,7 +7,7 @@ namespace CGFSMVVM.Views
 {
     public class HeatBarView : ContentPage
     {
-
+        private ScrollView _scrollView;
         private StackLayout _baseLayout, _childLayout;
         private Image _headerImage;
         private Label _questionLabel,_messageLabel;
@@ -26,11 +26,11 @@ namespace CGFSMVVM.Views
 
             NavigationPage.SetHasNavigationBar(this, false);
 
-            heatBarViewModel = new HeatBarViewModel(Navigation, currQuesIndex, _childLayout, _headerImage);
+            heatBarViewModel = new HeatBarViewModel(Navigation, currQuesIndex, _childLayout,_scrollView);
             BindingContext = heatBarViewModel;
 
             heatBarViewModel.LoadQuestionCommand.Execute(_questionLabel);
-            heatBarViewModel.LoadChildQuestionCommand.Execute(_headerImage);
+            heatBarViewModel.LoadChildQuestionCommand.Execute(null);
             heatBarViewModel.LoadMessageTextCommand.Execute(_messageLabel);
 
         }
@@ -42,7 +42,7 @@ namespace CGFSMVVM.Views
             {
                 BackgroundColor = Color.FromRgb(0, 0, 0),
                 VerticalOptions = LayoutOptions.Fill,
-                Padding=20
+                Padding = 20
             };
 
             _headerImage = new Image
@@ -58,10 +58,8 @@ namespace CGFSMVVM.Views
                 FontSize=30,
                 HorizontalTextAlignment=TextAlignment.Center,
                 TextColor=Color.White,
-                VerticalOptions=LayoutOptions.Center,
                 HorizontalOptions=LayoutOptions.Center,
-                HeightRequest=300,
-                Margin = new Thickness(20,50,20,10)
+                Margin = new Thickness(20,20,20,60)
             };
 
             _baseLayout.Children.Add(_headerImage);
@@ -69,10 +67,12 @@ namespace CGFSMVVM.Views
 
             ComponentHeatBar chb = new ComponentHeatBar();
             StackLayout sl = chb.GetHeatBarLayout();
+            sl.VerticalOptions = LayoutOptions.StartAndExpand;
 
             ComponentNavPane cnp = new ComponentNavPane();
             RelativeLayout sl2 = cnp.GetNavPane();
             _messageLabel = cnp.GetMessageLabel();
+            sl2.VerticalOptions = LayoutOptions.EndAndExpand;
 
             ComponentProgressPane cpp = new ComponentProgressPane();
             StackLayout sl3 = cpp.GetProgressPane();
@@ -86,7 +86,15 @@ namespace CGFSMVVM.Views
             _baseLayout.Children.Add(sl2);
             _baseLayout.Children.Add(sl3);
 
-            Content = _baseLayout;
+            _scrollView = new ScrollView()
+            {
+                Content = _baseLayout,
+                BackgroundColor = Color.Black,
+                VerticalOptions = LayoutOptions.Fill
+            };
+
+
+            Content = _scrollView;
         }
     }
 }
