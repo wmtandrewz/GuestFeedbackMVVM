@@ -145,7 +145,12 @@ namespace CGFSMVVM.Services
                 case null:
                     if (_nextQuestion.UIControl == "sli")
                     {
-                        _navigation.PushAsync(new HeatBarView(_currQuestionindex, _nextQuestion.QNo));
+                        if (_nextQuestion.RatingScale != null)
+                        {
+                            var ratingScale = _nextQuestion.RatingScale.Count;
+                            _navigation.PushAsync(new HeatBarView(_currQuestionindex, _nextQuestion.QNo, ratingScale));
+                        }
+
                     }
                     else
                     {

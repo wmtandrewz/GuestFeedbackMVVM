@@ -30,6 +30,12 @@ namespace CGFSMVVM.Models
             set;
         }
 
+        public static List<Image> MultiSelectionsIconlList
+        {
+            get;
+            set;
+        }
+
         public static List<Button> HeatButonList
         {
             get;
@@ -63,6 +69,7 @@ namespace CGFSMVVM.Models
             EmojiDescLabelList = new List<Label>();
             MultiOptionsLabelList = new List<Label>();
             MultiSelectionsLabelList = new List<Label>();
+            MultiSelectionsIconlList = new List<Image>();
             HeatButonList = new List<Button>();
             DualOptionList = new List<Image>();
             CommentEditor = new Editor();
@@ -79,6 +86,7 @@ namespace CGFSMVVM.Models
             EmojiDescLabelList.Clear();
             MultiOptionsLabelList.Clear();
             MultiSelectionsLabelList.Clear();
+            MultiSelectionsIconlList.Clear();
             HeatButonList.Clear();
             DualOptionList.Clear();
             ChildHeatListCollection.Clear();

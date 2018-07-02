@@ -25,10 +25,13 @@ namespace CGFSMVVM.ViewModels
         private string _currQuestionindex { get; }
         private string _selectedValue;
         private bool _nextHasPreviousFeedback = false;
+        private bool _tapLocked = false;
 
         private QuestionsModel _Questions;
         private NameValueCollection SelectedOptionsNVC = new NameValueCollection();
         private List<Label> MultiSelectionsLabelList = new List<Label>();
+        private List<Image> MultiSelectionsImageList = new List<Image>();
+        private Label _messageLabel;
 
         public MultiSelectionsViewModel(INavigation iNavigation,string currQuestionIndex)
         {
@@ -52,6 +55,7 @@ namespace CGFSMVVM.ViewModels
 
         private void SetMessageText(Label label)
         {
+            _messageLabel = label;
             CommonPropertySetter.SetMessageLabelText(label, _Questions.Optional);
         }
 
@@ -60,6 +64,11 @@ namespace CGFSMVVM.ViewModels
             foreach (var item in GlobalModel.MultiSelectionsLabelList)
             {
                 this.MultiSelectionsLabelList.Add(item);
+            }
+
+            foreach (var item in GlobalModel.MultiSelectionsIconlList)
+            {
+                this.MultiSelectionsImageList.Add(item);
             }
         }
 
@@ -84,58 +93,84 @@ namespace CGFSMVVM.ViewModels
         async Task OptionTapped(MultiOpsLabelModel multiOpsModel)
         {
 
-            //_selectedValue = multiOpsModel.ID;
-            //Console.WriteLine("tapped :" + _selectedValue);
-
-            foreach (var item in MultiSelectionsLabelList)
+            try
             {
-                if (item.Id == multiOpsModel.OptionLabel.Id)
+                //set message
+                _messageLabel.Text = "Please Tap on Next button to continue";
+
+                //_selectedValue = multiOpsModel.ID;
+                //Console.WriteLine("tapped :" + _selectedValue);
+                if (!_tapLocked)
                 {
-                    if (item.BackgroundColor==Color.FromRgb(60, 0, 70))
+                    _tapLocked = true;
+
+                    int iconSeq = 0;
+
+                    foreach (var item in MultiSelectionsLabelList)
                     {
-                        item.BackgroundColor = Color.Purple;
+                        if (item.Id == multiOpsModel.OptionLabel.Id)
+                        {
+                            if (item.BackgroundColor == Color.FromRgb(60, 0, 70))
+                            {
+                                item.BackgroundColor = Color.Purple;
+                                MultiSelectionsImageList[iconSeq].Source = ImageSource.FromFile("Images/checked.png");
+                            }
+                            else
+                            {
+                                item.BackgroundColor = Color.FromRgb(60, 0, 70);
+                                MultiSelectionsImageList[iconSeq].Source = ImageSource.FromFile("Images/unchecked.png");
+                            }
+                        }
+                        iconSeq++;
                     }
-                    else
+
+                    await multiOpsModel.OptionLabel.ScaleTo(2, 150);
+                    await multiOpsModel.OptionLabel.ScaleTo(1, 150);
+
+                    string[] selectedOptionsArray = new string[MultiSelectionsLabelList.Count];
+
+                    int x = 0;
+                    int loop = 0;
+                    foreach (var item in MultiSelectionsLabelList)
                     {
-                        item.BackgroundColor = Color.FromRgb(60, 0, 70);
+                        if (item.BackgroundColor == Color.Purple)
+                        {
+                            selectedOptionsArray[loop] = x.ToString();
+                            loop++;
+                        }
+
+                        x++;
+                    }
+
+                    _selectedValue = null;
+
+                    if (string.IsNullOrEmpty(selectedOptionsArray[0]))
+                    {
+                        //set message
+                        CommonPropertySetter.SetMessageLabelText(_messageLabel, _Questions.Optional);
+                    }
+
+                    foreach (var item in selectedOptionsArray)
+                    {
+
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            if (string.IsNullOrEmpty(_selectedValue))
+                            {
+                                _selectedValue = item;
+                            }
+                            else
+                            {
+                                _selectedValue += "," + item;
+                            }
+                        }
                     }
                 }
+                _tapLocked = false;
             }
-
-            await multiOpsModel.OptionLabel.ScaleTo(2, 150);
-            await multiOpsModel.OptionLabel.ScaleTo(1, 150);
-
-            string[] selectedOptionsArray = new string[MultiSelectionsLabelList.Count];
-
-            int x = 0;
-            int loop = 0;
-            foreach (var item in MultiSelectionsLabelList)
-            {
-                if (item.BackgroundColor == Color.Purple)
-                {
-                    selectedOptionsArray[loop] = x.ToString();
-                    loop++;
-                }
-
-                x++;
-            }
-
-            _selectedValue = null;
-
-            foreach (var item in selectedOptionsArray)
+            catch(Exception)
             {
 
-                if (!string.IsNullOrEmpty(item))
-                {
-                    if (string.IsNullOrEmpty(_selectedValue))
-                    {
-                        _selectedValue = item;
-                    }
-                    else
-                    {
-                        _selectedValue += "," + item;
-                    }
-                }
             }
         }
 

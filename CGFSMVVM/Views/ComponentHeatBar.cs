@@ -11,7 +11,7 @@ namespace CGFSMVVM.Views
         private StackLayout _baseLayout, _imLayout;
         private Button _button;
 
-        public StackLayout GetHeatBarLayout()
+        public StackLayout GetHeatBarLayout(int buttonCount)
         {
             _baseLayout = new StackLayout
             {
@@ -28,7 +28,7 @@ namespace CGFSMVVM.Views
                 HeightRequest = 60
             };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < buttonCount; i++)
             {
                 _button = new Button()
                 {

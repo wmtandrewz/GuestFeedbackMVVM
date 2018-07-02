@@ -363,6 +363,21 @@ namespace CGFSMVVM.ViewModels
         private void LoadNextPageWithSkip()
         {
             AddToFeedbackCart("0");
+
+            if (children != null)
+            {
+                if (children.Count > 0)
+                {
+                    foreach (var item in children)
+                    {
+                        if (item.Value.QType != "L")
+                        {
+                            AddToFeedbackCart(item.Value.QId, "0");
+                        }
+                    }
+                }
+            }
+
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, "0");
             _canLoadNext = true;
         }
@@ -396,7 +411,25 @@ namespace CGFSMVVM.ViewModels
             else
             {
                 FeedbackCart.RatingNVC.Remove(_Questions.QId);
-                AddToFeedbackCart();
+                AddToFeedbackCart("0");
+            }
+        }
+
+        /// <summary>
+        /// Adds to feedback cart.
+        /// </summary>
+        /// <param name="qid">Qid.</param>
+        /// <param name="skipped">Skipped.</param>
+        private void AddToFeedbackCart(string qid, string skipped)
+        {
+            if (FeedbackCart.RatingNVC[qid] == null)
+            {
+                FeedbackCart.RatingNVC.Add(qid, skipped);
+            }
+            else
+            {
+                FeedbackCart.RatingNVC.Remove(qid);
+                AddToFeedbackCart(qid, "0");
             }
         }
 

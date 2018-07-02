@@ -17,12 +17,12 @@ namespace CGFSMVVM.Views
         private string _prevQuesIndex;
         private string _currQuesIndex;
 
-        public HeatBarView(string prevQuesIndex, string currQuesIndex)
+        public HeatBarView(string prevQuesIndex, string currQuesIndex, int heatButtonCount)
         {
             this._prevQuesIndex = prevQuesIndex;
             this._currQuesIndex = currQuesIndex;
 
-            InitUI();
+            InitUI(heatButtonCount);
 
             NavigationPage.SetHasNavigationBar(this, false);
 
@@ -35,7 +35,7 @@ namespace CGFSMVVM.Views
 
         }
 
-        private void InitUI()
+        private void InitUI(int buttonCount)
         {
 
             _baseLayout = new StackLayout()
@@ -66,7 +66,7 @@ namespace CGFSMVVM.Views
             _baseLayout.Children.Add(_questionLabel);
 
             ComponentHeatBar chb = new ComponentHeatBar();
-            StackLayout sl = chb.GetHeatBarLayout();
+            StackLayout sl = chb.GetHeatBarLayout(buttonCount);
             sl.VerticalOptions = LayoutOptions.StartAndExpand;
 
             ComponentNavPane cnp = new ComponentNavPane();

@@ -172,6 +172,12 @@ namespace CGFSMVVM.DataParsers
 
             if (nextQ!=null)
             {
+                //Add skipped to feedback cart
+
+                AddSkippedToFeedbackCart(nextQ.QNo);
+                AddToFeedbackCart(nextQ.QId, "0");
+
+                //Get after skiiped question key
                 key = GetNextQuestionNumber(nextQ.QNo);
             }
 
@@ -184,6 +190,7 @@ namespace CGFSMVVM.DataParsers
                 return null;
             }
         }
+
 
         /// <summary>
         /// Gets the next question number.
@@ -239,6 +246,11 @@ namespace CGFSMVVM.DataParsers
             }
         }
 
+        /// <summary>
+        /// Gets the child question set.
+        /// </summary>
+        /// <returns>The child question set.</returns>
+        /// <param name="parentQNo">Parent QN.</param>
         public static Dictionary<string,QuestionsModel> GetChildQuestionSet(string parentQNo)
         {
             try
@@ -248,6 +260,41 @@ namespace CGFSMVVM.DataParsers
             catch(Exception)
             {
                 return null;
+            }
+        }
+
+
+        private static void AddSkippedToFeedbackCart(string Qno)
+        {
+            try
+            {
+                var ChildrenSet = GetChildQuestionSet(Qno);
+
+                foreach (var item in ChildrenSet)
+                {
+                    if (item.Value.QType != "L")
+                    {
+                        AddToFeedbackCart(item.Value.QId, "0");
+                    }
+                }
+            }
+            catch(Exception )
+            {
+                Console.WriteLine("No Childrens for" + Qno);
+            }
+
+        }
+
+        private static void AddToFeedbackCart(string qid, string skipped)
+        {
+            if (FeedbackCart.RatingNVC[qid] == null)
+            {
+                FeedbackCart.RatingNVC.Add(qid, skipped);
+            }
+            else
+            {
+                FeedbackCart.RatingNVC.Remove(qid);
+                AddToFeedbackCart(qid, "0");
             }
         }
 

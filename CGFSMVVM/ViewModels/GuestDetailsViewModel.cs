@@ -343,7 +343,11 @@ namespace CGFSMVVM.ViewModels
             {
                 if (_nextQuestion.UIControl == "sli")
                 {
-                    _navigation.PushAsync(new HeatBarView(_currQuesNo, _nextQuestion.QNo));
+                    if (_nextQuestion.RatingScale != null)
+                    {
+                        var ratingScale = _nextQuestion.RatingScale.Count;
+                        _navigation.PushAsync(new HeatBarView(_currQuesNo, _nextQuestion.QNo, ratingScale));
+                    }
                 }
                 else
                 {

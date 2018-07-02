@@ -9,8 +9,9 @@ namespace CGFSMVVM.Views
     {
 
         Entry _guestPhoneNumEditor, _guestMailEditor;
-        Label _guestPhoneLabel,_guestMailLabel,_titleLabel;
-        StackLayout _baseLayout, _formLayout;
+        Label _guestPhoneLabel,_guestMailLabel,_titleLabel, _policyTitle, _privacyText, _agreeText;
+        StackLayout _baseLayout, _formLayout, _agreeLayer;
+        Switch _agreeSwitch;
         Image _titleImage;
         ContactDetailsViewModel contactDetailsViewModel;
 
@@ -40,23 +41,86 @@ namespace CGFSMVVM.Views
             _titleImage.Source = ImageSource.FromFile("Images/cinnamon.png");
             _titleImage.HeightRequest = 150;
 
-            _titleLabel = new Label
+            _policyTitle = new Label
             {
-                Text = "Please provide your contact details",
+                Text = "Pivacy policy | EU - GDPR",
+                FontSize = 24,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Start,
+                VerticalTextAlignment = TextAlignment.Center,
+                TextColor = Color.FromHex("#008FBE"),
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.StartAndExpand,
+                HeightRequest = 60,
+                Margin = new Thickness(10, 10, 10, 10)
+
+            };
+
+            _privacyText = new Label
+            {
+                Text = "\tI confirm that I will be providing the Hotel with my personal information and data and " +
+                    "I hereby expressly consents to the use of such information and data for the purposes of the booking made with the Hotel. " +
+                    "This includes express permission to share the personal data and information with the Hotel’s service providers and agents.\n " +
+                    "I also further expressly consent to the use of my personal data to promote the products and services of the Hotel and the Cinnamon Group." +
+                    "I confirm that I have read through the hotel’s data policy and have understood my rights in relation to the personal data which I am providing the Hotel.",
+                FontSize = 20,
+                HorizontalTextAlignment = TextAlignment.Start,
+                VerticalTextAlignment = TextAlignment.Center,
+                TextColor = Color.White,
+                Margin = new Thickness(10,10,10,10)
+            };
+
+            _agreeLayer = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                BackgroundColor = Color.Black,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                HeightRequest = 50,
+                Margin = new Thickness(10, 10, 10, 10)
+            };
+
+            _agreeSwitch = new Switch()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center
+            };
+
+            _agreeText = new Label
+            {
+                Text = "I agree",
                 FontSize = 24,
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalTextAlignment = TextAlignment.Center,
                 TextColor = Color.White,
                 VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = 150
+
+            };
+
+            _agreeLayer.Children.Add(_agreeText);
+            _agreeLayer.Children.Add(_agreeSwitch);
+
+            _titleLabel = new Label
+            {
+                Text = "Please provide your contact details",
+                FontSize = 30,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
+                TextColor = Color.White,
+                VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
-                HeightRequest = 300
+                HeightRequest = 60,
+                IsVisible = false
 
             };
 
             _formLayout = new StackLayout
             {
                 Orientation = StackOrientation.Vertical,
-                VerticalOptions = LayoutOptions.StartAndExpand
+                VerticalOptions = LayoutOptions.StartAndExpand,
+                IsVisible = false
             };
 
             _guestPhoneLabel = new Label
@@ -111,8 +175,12 @@ namespace CGFSMVVM.Views
 
             ComponentNavPane npv = new ComponentNavPane();
             RelativeLayout rl = npv.GetNavPane();
+            rl.VerticalOptions = LayoutOptions.EndAndExpand;
 
             _baseLayout.Children.Add(_titleImage);
+            _baseLayout.Children.Add(_policyTitle);
+            _baseLayout.Children.Add(_privacyText);
+            _baseLayout.Children.Add(_agreeLayer);
             _baseLayout.Children.Add(_titleLabel);
             _formLayout.Children.Add(_guestPhoneLabel);
             _formLayout.Children.Add(_guestPhoneNumEditor);
@@ -129,8 +197,23 @@ namespace CGFSMVVM.Views
 
             Content = new ScrollView
             {
-                Orientation = ScrollOrientation.Horizontal,
+                Orientation = ScrollOrientation.Vertical,
                 Content = _baseLayout
+            };
+
+            _agreeSwitch.Toggled += delegate
+            {
+                if (_agreeSwitch.IsToggled)
+                {
+                    _titleLabel.IsVisible = true;
+                    _formLayout.IsVisible = true;
+                    _guestPhoneNumEditor.Focus();
+                }
+                else
+                {
+                    _titleLabel.IsVisible = false;
+                    _formLayout.IsVisible = false;
+                }
             };
         }
 
@@ -138,7 +221,6 @@ namespace CGFSMVVM.Views
 		{
             base.OnAppearing();
 
-            _guestPhoneNumEditor.Focus();
 		}
 
 	}

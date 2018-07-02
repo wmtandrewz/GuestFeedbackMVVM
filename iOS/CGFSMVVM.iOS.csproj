@@ -225,6 +225,8 @@
     <BundleResource Include="Images\SettingsIcon.png" />
     <BundleResource Include="Sounds\5minsilence.mp3" />
     <BundleResource Include="Images\CGFSLogo.png" />
+    <BundleResource Include="Images\checked.png" />
+    <BundleResource Include="Images\unchecked.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />

@@ -38,6 +38,7 @@ namespace CGFSMVVM.ViewModels
         private QuestionsModel _Questions;
         Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
         List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
+        private Label _messageLabel;
 
 
         public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex, StackLayout childLayout, ScrollView scrollView)
@@ -112,6 +113,7 @@ namespace CGFSMVVM.ViewModels
         /// <param name="label">Label.</param>
         private void SetMessageText(Label label)
         {
+            _messageLabel = label;
             CommonPropertySetter.SetMessageLabelText(label, _Questions.Optional);
         }
 
@@ -142,7 +144,9 @@ namespace CGFSMVVM.ViewModels
             CommonPropertySetter.SetQuestionLabelText(label, _Questions.QDesc);
         }
 
-
+        /// <summary>
+        /// Loads the child data.
+        /// </summary>
         private void LoadChildData()
         {
             try
@@ -178,6 +182,10 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Buttons the tapped.
+        /// </summary>
+        /// <param name="heatButtonModel">Heat button model.</param>
         private async void ButtonTapped(HeatButtonModel heatButtonModel)
         {
             if (!_tapLocked)
@@ -194,7 +202,16 @@ namespace CGFSMVVM.ViewModels
                     item.TextColor = Color.Black;
                 }
 
-                int _seq = 9;
+                int _seq = buttonList.Count - 1;
+
+                if(_seq > 5)
+                {
+                    _colorList = GlobalModel.ColorList;
+                }
+                else
+                {
+                    _colorList = GlobalModel.ColorListSeconary;
+                }
 
                 foreach (var item in buttonList)
                 {
@@ -253,6 +270,18 @@ namespace CGFSMVVM.ViewModels
         /// <param name="heat_ChildModel">Heat child model.</param>
         private void ChildButtonTapped(Heat_ChildModel heat_ChildModel)
         {
+            //check wheather parent has a feedback
+
+            if (string.IsNullOrEmpty(_selectedValue))
+            {
+                Application.Current.MainPage.DisplayAlert("Attention!", "Please rate above question first.", "OK");
+                return;
+            }
+
+            //set message 
+            _messageLabel.Text = "Please Tap on next button to continue";
+
+
             int childRawId = Convert.ToInt32(heat_ChildModel.ItemID);
             int childColumnId = Convert.ToInt32(heat_ChildModel.ButtonModel.ID);
             Debug.WriteLine(heat_ChildModel.ItemID + " : " + heat_ChildModel.ButtonModel.ID);
@@ -307,11 +336,17 @@ namespace CGFSMVVM.ViewModels
 
         }
 
+        /// <summary>
+        /// Backs the button tapped.
+        /// </summary>
         private void BackButtonTapped()
         {
             _navigation.PopAsync();
         }
 
+        /// <summary>
+        /// Nexts the button tapped.
+        /// </summary>
         private void NextButtonTapped()
         {
             if (_canLoadNext)
@@ -329,7 +364,14 @@ namespace CGFSMVVM.ViewModels
 
                 if (_Questions.Optional || _nextHasPreviousFeedback)
                 {
-                    LoadNextPage();
+                    if (_Questions.Optional && _selectedValue == null)
+                    {
+                        LoadNextPageWithSkip();
+                    }
+                    else
+                    {
+                        LoadNextPage();
+                    }
                 }
                 else
                 {
@@ -345,6 +387,9 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Loads the next page.
+        /// </summary>
         private void LoadNextPage()
         {
             AddToFeedbackCart();
@@ -352,6 +397,34 @@ namespace CGFSMVVM.ViewModels
             _canLoadNext = true;
         }
 
+        /// <summary>
+        /// Loads the next page with skip.
+        /// </summary>
+        private void LoadNextPageWithSkip()
+        {
+            AddToFeedbackCart("0");
+
+            if (children != null)
+            {
+                if (children.Count > 0)
+                {
+                    foreach (var item in children)
+                    {
+                        if (item.Value.QType != "L")
+                        {
+                            AddToFeedbackCart(item.Value.QId, "0");
+                        }
+                    }
+                }
+            }
+
+            PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, "0");
+            _canLoadNext = true;
+        }
+
+        /// <summary>
+        /// Adds to feedback cart.
+        /// </summary>
         private void AddToFeedbackCart()
         {
             if (FeedbackCart.RatingNVC[_Questions.QId] == null)
@@ -365,6 +438,46 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Adds to feedback cart.
+        /// </summary>
+        /// <param name="skipped">Skipped.</param>
+        private void AddToFeedbackCart(string skipped)
+        {
+            if (FeedbackCart.RatingNVC[_Questions.QId] == null)
+            {
+                FeedbackCart.RatingNVC.Add(_Questions.QId, skipped);
+            }
+            else
+            {
+                FeedbackCart.RatingNVC.Remove(_Questions.QId);
+                AddToFeedbackCart("0");
+            }
+        }
+
+        /// <summary>
+        /// Adds to feedback cart.
+        /// </summary>
+        /// <param name="qid">Qid.</param>
+        /// <param name="skipped">Skipped.</param>
+        private void AddToFeedbackCart(string qid, string skipped)
+        {
+            if (FeedbackCart.RatingNVC[qid] == null)
+            {
+                FeedbackCart.RatingNVC.Add(qid, skipped);
+            }
+            else
+            {
+                FeedbackCart.RatingNVC.Remove(qid);
+                AddToFeedbackCart(qid, "0");
+            }
+        }
+
+        /// <summary>
+        /// Adds the child feedback to cart.
+        /// </summary>
+        /// <param name="childId">Child identifier.</param>
+        /// <param name="childRatingValue">Child rating value.</param>
         private void AddChildFeedbackToCart(string childId, string childRatingValue)
         {
             if (FeedbackCart.RatingNVC[childId] == null)
@@ -378,6 +491,9 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Restores the feedback data.
+        /// </summary>
         private void RestoreFeedbackData()
         {
             string previousFeedback = FeedbackCart.RatingNVC[_Questions.QId];
@@ -411,6 +527,9 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Restores the child feedback data.
+        /// </summary>
         private void RestoreChildFeedbackData()
         {
             try
@@ -468,6 +587,10 @@ namespace CGFSMVVM.ViewModels
             }
         }
 
+        /// <summary>
+        /// Checks the next has feedback.
+        /// </summary>
+        /// <returns><c>true</c>, if next has feedback was checked, <c>false</c> otherwise.</returns>
         private bool CheckNextHasFeedback()
         {
             var nextQuestion = QuestionJsonDeserializer.GetNextQuestion(_currQuestionindex);
