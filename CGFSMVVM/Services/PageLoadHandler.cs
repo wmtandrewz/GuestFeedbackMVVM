@@ -93,7 +93,7 @@ namespace CGFSMVVM.Services
                     dependancyQuestionRating = FeedbackCart.OtherNVC[dependancyQid];
                 }
 
-                if(string.IsNullOrEmpty(dependancyQuestionRating))
+                if(string.IsNullOrEmpty(dependancyQuestionRating) || dependancyQuestionRating ==(-1).ToString())
                 {
                     var afterSkippedQuestion = QuestionJsonDeserializer.SkipDependantQuestion(currQIndex);
 

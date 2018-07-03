@@ -210,6 +210,11 @@ namespace CGFSMVVM.ViewModels
         {
             if (FeedbackCart.OtherNVC[_Questions.QId] == null)
             {
+                if(string.IsNullOrEmpty(_selectedValue))
+                {
+                    _selectedValue = "-1";
+                }
+
                 FeedbackCart.OtherNVC.Add(_Questions.QId, _selectedValue);
             }
             else

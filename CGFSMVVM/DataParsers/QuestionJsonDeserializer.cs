@@ -297,6 +297,7 @@ namespace CGFSMVVM.DataParsers
                     return;
                 case "O":
                     nvc = FeedbackCart.OtherNVC;
+                    skipped = "-1";
                     break;
                 default:
                     nvc = FeedbackCart.RatingNVC;
