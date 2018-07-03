@@ -21,7 +21,7 @@ namespace CGFSMVVM.DataParsers
 
         private static List<string> QuestionNumberList = new List<string>();
 
-        private static Dictionary <string, Dictionary<string,QuestionsModel>> ChildQuestionDictionary = new Dictionary <string, Dictionary<string, QuestionsModel>>();
+        private static Dictionary<string, Dictionary<string, QuestionsModel>> ChildQuestionDictionary = new Dictionary<string, Dictionary<string, QuestionsModel>>();
 
         /// <summary>
         /// Deserializes the questions.
@@ -33,35 +33,35 @@ namespace CGFSMVVM.DataParsers
             ChildQuestionDictionary.Clear();
             QuestionNumberList.Clear();
 
-			if (!string.IsNullOrEmpty(Settings.HotelIdentifier))
-			{
-				string _result = await APIGetServices.GetQuestionsFromAPI(Settings.HotelIdentifier, "en-US","GC").ConfigureAwait(true);
+            if (!string.IsNullOrEmpty(Settings.HotelIdentifier))
+            {
+                string _result = await APIGetServices.GetQuestionsFromAPI(Settings.HotelIdentifier, "en-US", "GC").ConfigureAwait(true);
 
-				FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
+                FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
 
-				List<QuestionsModel> HotelQuestionsList = JsonConvert.DeserializeObject<List<QuestionsModel>>(_result);
+                List<QuestionsModel> HotelQuestionsList = JsonConvert.DeserializeObject<List<QuestionsModel>>(_result);
 
-				if (HotelQuestionsList != null)
-				{
-					foreach (var item in HotelQuestionsList)
-					{
-						HotelQuestionDictionary.Add(item.QNo, item);
-						QuestionNumberList.Add(item.QNo);
-						FeedbackCart._mainCatId = Convert.ToInt32(item.MainCategory);
-					}
+                if (HotelQuestionsList != null)
+                {
+                    foreach (var item in HotelQuestionsList)
+                    {
+                        HotelQuestionDictionary.Add(item.QNo, item);
+                        QuestionNumberList.Add(item.QNo);
+                        FeedbackCart._mainCatId = Convert.ToInt32(item.MainCategory);
+                    }
 
                     FilterChildQuestions();
 
-					return true;
-				}
-			}
-			else
-			{
-				return false;
-			}
-			return false;
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return false;
 
-		}
+        }
 
         /// <summary>
         /// Filters the child questions.
@@ -80,7 +80,7 @@ namespace CGFSMVVM.DataParsers
 
                     if (res.Values.Count > 1)
                     {
-                        
+
                         var indexObj = res.First();
 
                         ChildQuestionDictionary.Add(indexObj.Value.QNo, res);
@@ -100,7 +100,7 @@ namespace CGFSMVVM.DataParsers
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Console.WriteLine("Filter Questions");
             }
@@ -146,7 +146,7 @@ namespace CGFSMVVM.DataParsers
         /// <param name="prvIndex">Prv index. <see cref="T:CGFSMVVM.Models.Questions"/></param>
         public static QuestionsModel GetNextQuestion(string prvIndex)
         {
-            
+
             var key = GetNextQuestionNumber(prvIndex);
 
             if (!string.IsNullOrEmpty(key))
@@ -170,12 +170,12 @@ namespace CGFSMVVM.DataParsers
             var nextQ = GetNextQuestion(prvIndex);
             string key = "";
 
-            if (nextQ!=null)
+            if (nextQ != null)
             {
                 //Add skipped to feedback cart
 
                 AddSkippedToFeedbackCart(nextQ.QNo);
-                AddToFeedbackCart(nextQ.QId, "0");
+                AddToFeedbackCart(nextQ, "0");
 
                 //Get after skiiped question key
                 key = GetNextQuestionNumber(nextQ.QNo);
@@ -251,13 +251,13 @@ namespace CGFSMVVM.DataParsers
         /// </summary>
         /// <returns>The child question set.</returns>
         /// <param name="parentQNo">Parent QN.</param>
-        public static Dictionary<string,QuestionsModel> GetChildQuestionSet(string parentQNo)
+        public static Dictionary<string, QuestionsModel> GetChildQuestionSet(string parentQNo)
         {
             try
             {
                 return ChildQuestionDictionary[parentQNo];
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return null;
             }
@@ -274,27 +274,44 @@ namespace CGFSMVVM.DataParsers
                 {
                     if (item.Value.QType != "L")
                     {
-                        AddToFeedbackCart(item.Value.QId, "0");
+                        AddToFeedbackCart(item.Value, "0");
                     }
                 }
             }
-            catch(Exception )
+            catch (Exception)
             {
                 Console.WriteLine("No Childrens for" + Qno);
             }
 
         }
 
-        private static void AddToFeedbackCart(string qid, string skipped)
+        private static void AddToFeedbackCart(QuestionsModel model, string skipped)
         {
-            if (FeedbackCart.RatingNVC[qid] == null)
+            var nvc = FeedbackCart.RatingNVC;
+
+            switch (model.QType)
             {
-                FeedbackCart.RatingNVC.Add(qid, skipped);
+                
+                case "C":
+                    nvc = FeedbackCart.CommentNVC;
+                    return;
+                case "O":
+                    nvc = FeedbackCart.OtherNVC;
+                    break;
+                default:
+                    nvc = FeedbackCart.RatingNVC;
+                    break;
+            }
+
+
+            if (nvc[model.QId] == null)
+            {
+                nvc.Add(model.QId, skipped);
             }
             else
             {
-                FeedbackCart.RatingNVC.Remove(qid);
-                AddToFeedbackCart(qid, "0");
+                nvc.Remove(model.QId);
+                AddToFeedbackCart(model, "0");
             }
         }
 

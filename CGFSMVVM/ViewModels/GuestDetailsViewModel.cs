@@ -180,7 +180,7 @@ namespace CGFSMVVM.ViewModels
 
                 for (int i = 1; i <= ReservationDetailsDictionary.Count; i++)
                 {
-                    GenerateGuestNameLabels(ReservationDetailsDictionary[i.ToString()].Name,roomNoEntry.Text,ReservationDetailsDictionary[i.ToString()].GuestId,ReservationNumber);
+                    GenerateGuestNameLabels(ReservationDetailsDictionary[i.ToString()].Name,roomNoEntry.Text,ReservationDetailsDictionary[i.ToString()].GuestId,i,ReservationNumber);
                 }
 
                 if(string.IsNullOrEmpty(ReservationDetailsDictionary["1"].BookingId))
@@ -226,7 +226,7 @@ namespace CGFSMVVM.ViewModels
         /// <param name="roomNumber">Room number.</param>
         /// <param name="guestID">Guest identifier.</param>
         /// <param name="resNo">Res no.</param>
-        private void GenerateGuestNameLabels(string name,string roomNumber,string guestID,string resNo)
+        private void GenerateGuestNameLabels(string name,string roomNumber,string guestID,int guestIndex, string resNo)
         {
             var label = new Label()
             {
@@ -250,6 +250,11 @@ namespace CGFSMVVM.ViewModels
 
                 await label.ScaleTo(2, 200, Easing.CubicIn);
                 await label.ScaleTo(1, 200, Easing.CubicOut);
+
+                if(string.IsNullOrEmpty(guestID))
+                {
+                    guestID = $"{resNo}_{guestIndex}";
+                }
 
 				bool isGivenFeedback = await IsFeedbackGiven(Settings.HotelIdentifier, resNo, guestID);
 

@@ -243,6 +243,7 @@ namespace CGFSMVVM.ViewModels
                         
                         _childLayout.IsVisible = false;
                         ResetChildRatingsFromCart();
+                        SetChildRatingtoZero();
                         _autofoward = true;
                     }
                 }
@@ -498,7 +499,7 @@ namespace CGFSMVVM.ViewModels
         {
             string previousFeedback = FeedbackCart.RatingNVC[_Questions.QId];
 
-            if (previousFeedback != null)
+            if (previousFeedback != null && previousFeedback != (0).ToString())
             {
                 _selectedValue = previousFeedback;
 
@@ -508,14 +509,23 @@ namespace CGFSMVVM.ViewModels
                     item.TextColor = Color.Black;
                 }
 
-                int _seq = 9;
+                int _seq = GlobalModel.HeatButonList.Count-1;
+
+                if (_seq > 5)
+                {
+                    _colorList = GlobalModel.ColorList;
+                }
+                else
+                {
+                    _colorList = GlobalModel.ColorListSeconary;
+                }
 
                 foreach (var item in GlobalModel.HeatButonList)
                 {
                     item.BackgroundColor = _colorList[_seq];
                     item.TextColor = Color.White;
 
-                    if ((10 - _seq).ToString() == _selectedValue)
+                    if ((GlobalModel.HeatButonList.Count - _seq).ToString() == _selectedValue)
                     {
                         break;
                     }
@@ -551,7 +561,7 @@ namespace CGFSMVVM.ViewModels
                 {
                     string previousChildRating = FeedbackCart.RatingNVC[item];
 
-                    if (previousChildRating != null)
+                    if (previousChildRating != null && previousChildRating != (0).ToString() )
                     {
                         _childLayout.IsVisible = true;// Visible child layout if feedbacks already given
 
@@ -570,7 +580,7 @@ namespace CGFSMVVM.ViewModels
                             items.BackgroundColor = GlobalModel.ColorListSeconary[_seqe];
                             items.TextColor = Color.White;
 
-                            if ((5 - _seqe).ToString() == previousChildRating)
+                            if ((currentModel.buttonList.Count - _seqe).ToString() == previousChildRating)
                             {
                                 break;
                             }
@@ -666,6 +676,24 @@ namespace CGFSMVVM.ViewModels
             catch(Exception)
             {
                 Console.WriteLine("Reset Child Exeption");
+            }
+        }
+
+        private void SetChildRatingtoZero()
+        {
+            try
+            {
+                foreach (var item in children)
+                {
+                    if (item.Value.QType != "L")
+                    {
+                        AddChildFeedbackToCart(item.Value.QId, "0");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Zero rating Set Child Exeption");
             }
         }
 

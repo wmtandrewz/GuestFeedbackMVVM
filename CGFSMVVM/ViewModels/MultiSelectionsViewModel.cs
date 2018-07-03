@@ -246,10 +246,12 @@ namespace CGFSMVVM.ViewModels
                             if (item.BackgroundColor == Color.FromRgb(60, 0, 70))
                             {
                                 item.BackgroundColor = Color.Purple;
+                                MultiSelectionsImageList[i].Source = ImageSource.FromFile("Images/checked.png");
                             }
                             else
                             {
                                 item.BackgroundColor = Color.FromRgb(60, 0, 70);
+                                MultiSelectionsImageList[i].Source = ImageSource.FromFile("Images/unchecked.png");
                             }
                             ii++;
                         }
