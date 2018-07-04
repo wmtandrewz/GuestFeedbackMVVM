@@ -96,5 +96,12 @@ namespace CGFSMVVM.Views
 
             Content = _scrollView;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            heatBarViewModel.OnAppearingCommand.Execute(null);
+        }
     }
+
 }

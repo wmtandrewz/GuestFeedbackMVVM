@@ -17,6 +17,7 @@ namespace CGFSMVVM.ViewModels
         public ICommand LoadQuestionCommand { get; }
         public ICommand LoadMessageTextCommand { get; }
         public ICommand LoadOptionsDescCommand { get; }
+        public ICommand OnAppearingCommand { get; }
         public INavigation _navigation { get; }
 
         public string _currQuestionindex { get; }
@@ -25,6 +26,7 @@ namespace CGFSMVVM.ViewModels
         private List<Label> MultiOptionsLabelList = new List<Label>();
         private bool _tapLocked = false;
         private bool _canLoadNext = true;
+        private bool _canGoBack = true;
 
         private QuestionsModel _Questions;
 
@@ -37,6 +39,8 @@ namespace CGFSMVVM.ViewModels
 
             LoadLabels();
 
+            OnAppearingCommand = new Command(OnAppearing);
+
             OptionTappedCommand = new Command<MultiOpsLabelModel>(async (multiOpsModel) => await OptionTapped(multiOpsModel).ConfigureAwait(true));
             LoadQuestionCommand = new Command<Label>(LoadData);
             LoadMessageTextCommand = new Command<Label>(SetMessageText);
@@ -46,6 +50,13 @@ namespace CGFSMVVM.ViewModels
 
             RestoreFeedbackData();
 
+        }
+
+        private void OnAppearing()
+        {
+            _canLoadNext = true;
+            _canGoBack = true;
+            _tapLocked = false;
         }
 
         private void LoadLabels()
@@ -85,6 +96,7 @@ namespace CGFSMVVM.ViewModels
             {
                 _tapLocked = true;
                 _canLoadNext = false;
+                _canGoBack = false;
 
                 _selectedValue = multiOpsModel.ID;
                 Console.WriteLine("tapped :" + _selectedValue);
@@ -109,7 +121,7 @@ namespace CGFSMVVM.ViewModels
                 Device.StartTimer(TimeSpan.FromSeconds(GlobalModel.TimeSpan), () =>
                 {
                     LoadNextPage();
-                    _tapLocked = false;
+                    //_tapLocked = false;
                     return false;
 
                 });
@@ -119,7 +131,10 @@ namespace CGFSMVVM.ViewModels
 
         private void BackButtonTapped()
         {
-            _navigation.PopAsync();
+            if (_canGoBack)
+            {
+                _navigation.PopAsync();
+            }
         }
 
         private void NextButtonTapped()
@@ -156,7 +171,7 @@ namespace CGFSMVVM.ViewModels
             }
 
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, _selectedValue);
-            _canLoadNext = true;
+            //_canLoadNext = true;
         }
 
         private void AddToFeedbackCart()

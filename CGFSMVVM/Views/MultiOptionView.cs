@@ -87,6 +87,7 @@ namespace CGFSMVVM.Views
         {
             base.OnAppearing();
 
+            multiOptionsViewModel.OnAppearingCommand.Execute(null);
         }
     }
 }

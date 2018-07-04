@@ -30,6 +30,7 @@ namespace CGFSMVVM.ViewModels
         private bool _nextHasPreviousFeedback = false;
         private bool _tapLocked = false;
         private bool _canLoadNext = true;
+        private bool _canGoBack = true;
         private bool _autofoward = false;
 
         private StackLayout _childLayout;
@@ -145,6 +146,9 @@ namespace CGFSMVVM.ViewModels
         /// <param name="label">Label.</param>
         private void LoadData(Label label)
         {
+            _canLoadNext = true;
+            _canGoBack = true;
+            _tapLocked = false;
             CommonPropertySetter.SetQuestionLabelText(label, _Questions.QDesc);
         }
 
@@ -193,6 +197,7 @@ namespace CGFSMVVM.ViewModels
             {
                 _tapLocked = true;
                 _canLoadNext = false;
+                _canGoBack = false;
 
                 _selectedValue = (Convert.ToInt32(emojiIconModel.Id) + 1).ToString();
 
@@ -253,9 +258,17 @@ namespace CGFSMVVM.ViewModels
                     if (_autofoward)
                     {
                         LoadNextPage();
+                        _canLoadNext = false;
+                        _canGoBack = false;
+                        _tapLocked = true;
                     }
-                    _tapLocked = false;
-                    _canLoadNext = true;
+                    else
+                    {
+                        _canLoadNext = true;
+                        _canGoBack = true;
+                        _tapLocked = false;
+                    }
+
                     return false;
                 });
             }
@@ -301,7 +314,10 @@ namespace CGFSMVVM.ViewModels
         /// </summary>
         private void BackButtonTapped()
         {
-            _navigation.PopAsync();
+            if (_canGoBack)
+            {
+                _navigation.PopAsync();
+            }
         }
 
         /// <summary>
@@ -354,7 +370,7 @@ namespace CGFSMVVM.ViewModels
         {
             AddToFeedbackCart();
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, _selectedValue);
-            _canLoadNext = true;
+            //_canLoadNext = true;
         }
 
         /// <summary>
@@ -379,7 +395,7 @@ namespace CGFSMVVM.ViewModels
             }
 
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, "0");
-            _canLoadNext = true;
+            //_canLoadNext = true;
         }
 
         /// <summary>
