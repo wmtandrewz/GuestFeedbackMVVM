@@ -47,7 +47,6 @@ namespace CGFSMVVM.DataParsers
                     {
                         HotelQuestionDictionary.Add(item.QNo, item);
                         QuestionNumberList.Add(item.QNo);
-                        FeedbackCart._mainCatId = Convert.ToInt32(item.MainCategory);
                     }
 
                     FilterChildQuestions();
@@ -126,7 +125,10 @@ namespace CGFSMVVM.DataParsers
         public static QuestionsModel GetFirstQuestion(int index)
         {
             CurrQuestion = QuestionNumberList[index];
-            return HotelQuestionDictionary[QuestionNumberList[index]];
+
+            return HotelQuestionDictionary[QuestionNumberList[index]];           
+
+
         }
 
         /// <summary>

@@ -43,8 +43,6 @@ namespace CGFSMVVM.ViewModels
 
             NativeCamera.InitCamera();
 
-			FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
-
         }
 
         private async void CheckConfigurations()

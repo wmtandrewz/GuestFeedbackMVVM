@@ -33,9 +33,9 @@ namespace CGFSMVVM.Services
 
         static FeedbackCart()
         {
-           RatingNVC = new NameValueCollection();
-           CommentNVC = new NameValueCollection();
-           OtherNVC = new NameValueCollection();
+            RatingNVC = new NameValueCollection();
+            CommentNVC = new NameValueCollection();
+            OtherNVC = new NameValueCollection();
 
         }
 

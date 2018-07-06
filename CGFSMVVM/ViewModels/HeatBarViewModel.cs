@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -38,9 +39,10 @@ namespace CGFSMVVM.ViewModels
         private List<Button> buttonList = new List<Button>();
         private List<Color> _colorList;
         private QuestionsModel _Questions;
-        Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
-        List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
+        private Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
+        private List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
         private Label _messageLabel;
+        private NameValueCollection childRatingsNameValues = new NameValueCollection();
 
 
         public HeatBarViewModel(INavigation iNavigation, string currQuestionIndex, StackLayout childLayout, ScrollView scrollView)
@@ -323,8 +325,10 @@ namespace CGFSMVVM.ViewModels
             var childSelectedValue = (Convert.ToInt32(childColumnId) + 1).ToString();
             Debug.WriteLine(childQId + " : " + childSelectedValue);
 
-            //Add selected ratings to cart
-            AddChildFeedbackToCart(childQId, childSelectedValue);
+            //Add selected ratings to childRatingsNameValues NVC
+            //AddChildFeedbackToCart(childQId, childSelectedValue);
+            AddToChildFeedbackToNVC(childQId, childSelectedValue);
+
 
             //current button row list
             var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
@@ -418,6 +422,7 @@ namespace CGFSMVVM.ViewModels
         private void LoadNextPage()
         {
             AddToFeedbackCart();
+            SaveChildFeedbacks();
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, _selectedValue);
             //_canLoadNext = true;
         }
@@ -464,6 +469,24 @@ namespace CGFSMVVM.ViewModels
         }
 
         /// <summary>
+        /// Adds to child feedback to childRatingsNameValues nvc.
+        /// </summary>
+        /// <param name="qid">Qid.</param>
+        /// <param name="rating">Rating.</param>
+        private void AddToChildFeedbackToNVC(string qid, string rating)
+        {
+            if (childRatingsNameValues[qid] == null)
+            {
+                childRatingsNameValues.Add(qid, rating);
+            }
+            else
+            {
+                childRatingsNameValues.Remove(qid);
+                AddToChildFeedbackToNVC(qid,rating);
+            }
+        }
+
+        /// <summary>
         /// Adds to feedback cart.
         /// </summary>
         /// <param name="skipped">Skipped.</param>
@@ -495,6 +518,34 @@ namespace CGFSMVVM.ViewModels
             {
                 FeedbackCart.RatingNVC.Remove(qid);
                 AddToFeedbackCart(qid, "0");
+            }
+        }
+
+        /// <summary>
+        /// Saves the child feedbacks.
+        /// </summary>
+        private void SaveChildFeedbacks()
+        {
+            try
+            {
+                foreach (var item in children)
+                {
+                    if (item.Value.QType != "L")
+                    {
+                        if (childRatingsNameValues[item.Value.QId] == null)
+                        {
+                            AddChildFeedbackToCart(item.Value.QId, "0");
+                        }
+                        else
+                        {
+                            AddChildFeedbackToCart(item.Value.QId, childRatingsNameValues[item.Value.QId]);
+                        }
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Save Child Feedbacks failed");
             }
         }
 
@@ -585,6 +636,12 @@ namespace CGFSMVVM.ViewModels
                 {
                     string previousChildRating = FeedbackCart.RatingNVC[item];
 
+                    //Load child ratings to local NVC if feedbacks had given
+                    if (previousChildRating != "0")
+                    {
+                        AddToChildFeedbackToNVC(item, previousChildRating);
+                    }
+
                     if (previousChildRating != null && previousChildRating != (0).ToString() )
                     {
                         _childLayout.IsVisible = true;// Visible child layout if feedbacks already given
@@ -656,25 +713,17 @@ namespace CGFSMVVM.ViewModels
         {
             try
             {
-                var childQId = "";
-
-                for (int i = 0; i < children.Count; i++)
+                foreach (var item in children)
                 {
-                    if (children.ElementAt(0).Value.QType == "L")
+                    if(item.Value.QType != "L")
                     {
-                        childQId = children.ElementAt(i + 1).Value.QId;
-                        i++;
-                    }
-                    else
-                    {
-                        childQId = children.ElementAt(i).Value.QId;
-                    }
-
-                    var feedback = FeedbackCart.RatingNVC[childQId];
-
-                    if (string.IsNullOrEmpty(feedback))
-                    {
-                        return false;
+                        if(!item.Value.Optional)
+                        {
+                            if (string.IsNullOrEmpty(childRatingsNameValues[item.Value.QId]))
+                            {
+                                return false;
+                            }
+                        }
                     }
                 }
                 return true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CGFSMVVM.DataParsers;
 using CGFSMVVM.Models;
 using Xamarin.Forms;
 
@@ -11,7 +12,11 @@ namespace CGFSMVVM.Views
         Image _checkBoxImage;
         private Label _optionLabel;
 
-        public StackLayout GetMultiSelectionsLayout(List<string>optionList){
+        private QuestionsModel _Questions;
+
+        public StackLayout GetMultiSelectionsLayout(string currQuestionIndex){
+
+            this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
 
             _baseLayer = new StackLayout();
 
@@ -24,7 +29,7 @@ namespace CGFSMVVM.Views
             };
 
 
-            for (int i = 0; i < optionList.Count; i++)
+            for (int i = 0; i < _Questions.OtherQuestions.Count; i++)
             {
                 _checkboxlayer = new StackLayout()
                 {
@@ -41,7 +46,6 @@ namespace CGFSMVVM.Views
 
                 _optionLabel = new Label()
                 {
-                    Text = optionList[i],
                     FontSize = 20,
                     VerticalTextAlignment=TextAlignment.Center,
                     HorizontalTextAlignment=TextAlignment.Center,

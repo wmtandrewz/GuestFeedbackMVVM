@@ -66,17 +66,8 @@ namespace CGFSMVVM.Views
             _baseLayout.Children.Add(_headerImage);
             _baseLayout.Children.Add(_questionLabel);
 
-
-            List<string> _optionList = new List<string>
-            {
-                "Selection 1",
-                "Selection 2",
-                "Selection 3",
-                "Selection 4",
-            };
-
             ComponentMultiSelections cmp = new ComponentMultiSelections();
-            StackLayout sl1 = cmp.GetMultiSelectionsLayout(_optionList);
+            StackLayout sl1 = cmp.GetMultiSelectionsLayout(_currQuesIndex);
 
             ComponentNavPane cnp = new ComponentNavPane();
             RelativeLayout sl2 = cnp.GetNavPane();

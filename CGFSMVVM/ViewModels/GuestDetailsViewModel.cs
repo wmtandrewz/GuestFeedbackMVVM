@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -150,6 +151,12 @@ namespace CGFSMVVM.ViewModels
         /// <param name="roomNoEntry">Room no entry.</param>
         private async void EntryUnfocused(Entry roomNoEntry)
         {
+            //Reset Data
+            FeedbackSerializer.ResetRatingNVCs();
+            FeedbackCart.ClearSavedData();
+
+            FeedbackCart._hotelIdentifier = Settings.HotelIdentifier;
+
             RemoveFormLayoutChildren();
 
             GenerateIndicator();
@@ -343,6 +350,11 @@ namespace CGFSMVVM.ViewModels
             GlobalModel.CleanGlobalModel();
 
             QuestionsModel _nextQuestion = QuestionJsonDeserializer.GetFirstQuestion(0);
+
+            //Set Main Category to cart
+            FeedbackCart._mainCatId = Convert.ToInt32(_nextQuestion.MainCategory);
+            Debug.WriteLine("Main Cat :" + FeedbackCart._mainCatId);
+            //
 
             if (_nextQuestion.QType == "")
             {
