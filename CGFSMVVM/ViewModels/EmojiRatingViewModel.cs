@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,9 +38,10 @@ namespace CGFSMVVM.ViewModels
         private ScrollView _scrollView;
         private List<Image> emojiIconList = new List<Image>();
         private List<Label> emojiLabelList = new List<Label>();
+        private Label _messageLabel;
         Dictionary<string, QuestionsModel> children = new Dictionary<string, QuestionsModel>();
         List<ChildHeatListModel> childHeatLists = new List<ChildHeatListModel>();
-
+        private NameValueCollection childRatingsNameValues = new NameValueCollection();
 
         private QuestionsModel _Questions;
 
@@ -113,6 +115,7 @@ namespace CGFSMVVM.ViewModels
         /// <param name="label">Label.</param>
         private void SetMessageText(Label label)
         {
+            _messageLabel = label;
             CommonPropertySetter.SetMessageLabelText(label, _Questions.Optional);
         }
 
@@ -276,9 +279,45 @@ namespace CGFSMVVM.ViewModels
 
         private void ChildButtonTapped(Heat_ChildModel heat_ChildModel)
         {
+            //check wheather parent has a feedback
+
+            if (string.IsNullOrEmpty(_selectedValue))
+            {
+                Application.Current.MainPage.DisplayAlert("Attention!", "Please rate above question first.", "OK");
+                return;
+            }
+
+            //set message 
+            _messageLabel.Text = "Please Tap on next button to continue";
+
+
+            int childRawId = Convert.ToInt32(heat_ChildModel.ItemID);
+            int childColumnId = Convert.ToInt32(heat_ChildModel.ButtonModel.ID);
             Debug.WriteLine(heat_ChildModel.ItemID + " : " + heat_ChildModel.ButtonModel.ID);
 
+            var childQId = "";
+
+            if (children.ElementAt(0).Value.QType == "L")
+            {
+                childQId = children.ElementAt(childRawId + 1).Value.QId;
+            }
+            else
+            {
+                childQId = children.ElementAt(childRawId).Value.QId;
+            }
+
+
+            var childSelectedValue = (Convert.ToInt32(childColumnId) + 1).ToString();
+            Debug.WriteLine(childQId + " : " + childSelectedValue);
+
+            //Add selected ratings to childRatingsNameValues NVC
+            //AddChildFeedbackToCart(childQId, childSelectedValue);
+            AddToChildFeedbackToNVC(childQId, childSelectedValue);
+
+
+            //current button row list
             var currentModel = childHeatLists[Convert.ToInt32(heat_ChildModel.ItemID)];
+
 
             //Button animations
             foreach (var item in currentModel.buttonList)
@@ -369,6 +408,7 @@ namespace CGFSMVVM.ViewModels
         private void LoadNextPage()
         {
             AddToFeedbackCart();
+            SaveChildFeedbacks();
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, _selectedValue);
             //_canLoadNext = true;
         }
@@ -396,6 +436,70 @@ namespace CGFSMVVM.ViewModels
 
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, "0");
             //_canLoadNext = true;
+        }
+
+        /// <summary>
+        /// Saves the child feedbacks.
+        /// </summary>
+        private void SaveChildFeedbacks()
+        {
+            try
+            {
+                foreach (var item in children)
+                {
+                    if (item.Value.QType != "L")
+                    {
+                        if (childRatingsNameValues[item.Value.QId] == null)
+                        {
+                            AddChildFeedbackToCart(item.Value.QId, "0");
+                        }
+                        else
+                        {
+                            AddChildFeedbackToCart(item.Value.QId, childRatingsNameValues[item.Value.QId]);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Save Child Feedbacks failed");
+            }
+        }
+
+        /// <summary>
+        /// Adds the child feedback to cart.
+        /// </summary>
+        /// <param name="childId">Child identifier.</param>
+        /// <param name="childRatingValue">Child rating value.</param>
+        private void AddChildFeedbackToCart(string childId, string childRatingValue)
+        {
+            if (FeedbackCart.RatingNVC[childId] == null)
+            {
+                FeedbackCart.RatingNVC.Add(childId, childRatingValue);
+            }
+            else
+            {
+                FeedbackCart.RatingNVC.Remove(childId);
+                AddChildFeedbackToCart(childId, childRatingValue);
+            }
+        }
+
+        /// <summary>
+        /// Adds to child feedback to nvc.
+        /// </summary>
+        /// <param name="qid">Qid.</param>
+        /// <param name="rating">Rating.</param>
+        private void AddToChildFeedbackToNVC(string qid, string rating)
+        {
+            if (childRatingsNameValues[qid] == null)
+            {
+                childRatingsNameValues.Add(qid, rating);
+            }
+            else
+            {
+                childRatingsNameValues.Remove(qid);
+                AddToChildFeedbackToNVC(qid, rating);
+            }
         }
 
         /// <summary>
@@ -517,7 +621,13 @@ namespace CGFSMVVM.ViewModels
                 {
                     string previousChildRating = FeedbackCart.RatingNVC[item];
 
-                    if (previousChildRating != null)
+                    //Load child ratings to local NVC if feedbacks had given
+                    if (previousChildRating != "0")
+                    {
+                        AddToChildFeedbackToNVC(item, previousChildRating);
+                    }
+
+                    if (previousChildRating != null && previousChildRating != (0).ToString())
                     {
                         _childLayout.IsVisible = true;// Visible child layout if feedbacks already given
 
@@ -537,7 +647,7 @@ namespace CGFSMVVM.ViewModels
                             items.BackgroundColor = GlobalModel.ColorListSeconary[_seqe];
                             items.TextColor = Color.White;
 
-                            if ((5 - _seqe).ToString() == previousChildRating)
+                            if ((currentModel.buttonList.Count - _seqe).ToString() == previousChildRating)
                             {
                                 break;
                             }
@@ -589,25 +699,17 @@ namespace CGFSMVVM.ViewModels
         {
             try
             {
-                var childQId = "";
-
-                for (int i = 0; i < children.Count; i++)
+                foreach (var item in children)
                 {
-                    if (children.ElementAt(0).Value.QType == "L")
+                    if (item.Value.QType != "L")
                     {
-                        childQId = children.ElementAt(i + 1).Value.QId;
-                        i++;
-                    }
-                    else
-                    {
-                        childQId = children.ElementAt(i).Value.QId;
-                    }
-
-                    var feedback = FeedbackCart.RatingNVC[childQId];
-
-                    if (string.IsNullOrEmpty(feedback))
-                    {
-                        return false;
+                        if (!item.Value.Optional)
+                        {
+                            if (string.IsNullOrEmpty(childRatingsNameValues[item.Value.QId]))
+                            {
+                                return false;
+                            }
+                        }
                     }
                 }
                 return true;
