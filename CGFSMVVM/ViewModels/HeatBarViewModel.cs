@@ -741,6 +741,8 @@ namespace CGFSMVVM.ViewModels
         {
             try
             {
+                childRatingsNameValues.Clear();
+
                 foreach (var item in children)
                 {
                     FeedbackCart.RatingNVC.Remove(item.Value.QId);

@@ -31,6 +31,7 @@ namespace CGFSMVVM.ViewModels
         private List<Label> _formChildList = new List<Label>();
         private List<Label> _guestsList = new List<Label>();
         private string _currQuesNo = "GuestDetailView";
+        bool _taplocked = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CGFSMVVM.ViewModels.GuestDetailsViewModel"/> class.
@@ -247,43 +248,50 @@ namespace CGFSMVVM.ViewModels
 
             };
 
+
+
             var nameTapRecognizer = new TapGestureRecognizer();
             nameTapRecognizer.Tapped += async (s, e) =>
             {
-                ResetSelectedGuesteffects();
-
-                label.TextColor = Color.LightGreen;
-                label.Opacity = 1;
-
-                await label.ScaleTo(2, 200, Easing.CubicIn);
-                await label.ScaleTo(1, 200, Easing.CubicOut);
-
-                if(string.IsNullOrEmpty(guestID))
+                if (!_taplocked)
                 {
-                    guestID = $"{resNo}_{guestIndex}";
+                    _taplocked = true;
+                    ResetSelectedGuesteffects();
+
+                    label.TextColor = Color.LightGreen;
+                    label.Opacity = 1;
+
+                    await label.ScaleTo(2, 200, Easing.CubicIn);
+                    await label.ScaleTo(1, 200, Easing.CubicOut);
+
+                    if (string.IsNullOrEmpty(guestID))
+                    {
+                        guestID = $"{resNo}_{guestIndex}";
+                    }
+
+                    bool isGivenFeedback = await IsFeedbackGiven(Settings.HotelIdentifier, resNo, guestID);
+
+                    if (!isGivenFeedback)
+                    {
+                        FeedbackCart._roomNum = roomNumber;
+                        FeedbackCart._guestID = guestID;
+                        FeedbackCart._guestName = label.Text;
+                        FeedbackCart._startTime = DateTime.Now.ToString();
+
+                        LoadQuestionViews();
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert($"Hi!\n {name} ", "You have already given a feedback", "OK");
+                        _taplocked = false;
+                    }
+
+                    Console.WriteLine(label.Text + ":" + guestID);
                 }
-
-				bool isGivenFeedback = await IsFeedbackGiven(Settings.HotelIdentifier, resNo, guestID);
-
-                if(!isGivenFeedback)
-                {
-                    FeedbackCart._roomNum = roomNumber;
-                    FeedbackCart._guestID = guestID;
-                    FeedbackCart._guestName = label.Text;
-                    FeedbackCart._startTime = DateTime.Now.ToString();
-
-                    LoadQuestionViews();
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert($"Hi!\n {name} ", "You have already given a feedback", "OK");    
-                }
-
-                Console.WriteLine(label.Text + ":" + guestID);
             };
 
             label.GestureRecognizers.Add(nameTapRecognizer);
-                 
+
             _formChildList.Add(label);
             _guestsList.Add(label);
             _formLayout.Children.Add(label);
@@ -393,6 +401,8 @@ namespace CGFSMVVM.ViewModels
             {
                 _navigation.PushAsync(new TextCommentView(_currQuesNo, _nextQuestion.QNo));
             }
+
+            _taplocked = false; // unlock name label tap lock
         }
 
         private void GenerateIndicator()
