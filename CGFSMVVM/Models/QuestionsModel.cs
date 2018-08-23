@@ -51,6 +51,9 @@ namespace CGFSMVVM.Models
         [JsonProperty("SubQuestionCriteria")]
         public string SubQuestionCriteria { get; set; }
 
+        [JsonProperty("OtherQValuesNA")]
+        public string OtherQValuesNA { get; set; }
+
         [JsonProperty("OtherQuestions")]
         public List<OtherQuestionsModel> OtherQuestions { get; set; }
 

@@ -103,8 +103,8 @@ namespace CGFSMVVM.Helpers
             get
             {
                 //return AppSettings.GetValueOrDefault("BaseDomainURL", "https://cheetah.azure-api.net/api/v1/");
-                //return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPIDev/api/");
-                return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPI/api/");
+                return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPIDev/api/");
+                //return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPI/api/");
             }
             set
             {

@@ -74,6 +74,19 @@ namespace CGFSMVVM.ViewModels
 
         private void LoadOptionsDesc()
         {
+            ////remove not applicable facilities
+            //if (_Questions.OtherQuestions != null && _Questions.OtherQValuesNA != null)
+            //{
+            //    foreach (var item in _Questions.OtherQuestions)
+            //    {
+            //        if (_Questions.OtherQValuesNA.Contains(item.QOId))
+            //        {
+            //            _Questions.OtherQuestions.Remove(item);
+            //        }
+            //    }
+
+            //}
+
             List<OtherQuestionsModel> QDesc = _Questions.OtherQuestions;
 
             int _index = 0;

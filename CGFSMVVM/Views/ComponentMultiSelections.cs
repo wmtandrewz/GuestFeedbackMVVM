@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CGFSMVVM.DataParsers;
 using CGFSMVVM.Models;
 using Xamarin.Forms;
@@ -17,6 +18,19 @@ namespace CGFSMVVM.Views
         public StackLayout GetMultiSelectionsLayout(string currQuestionIndex){
 
             this._Questions = QuestionJsonDeserializer.GetQuestion(currQuestionIndex);
+
+            ////remove not applicable facilities
+            //if(_Questions.OtherQuestions != null && _Questions.OtherQValuesNA != null)
+            //{
+            //    foreach (var item in _Questions.OtherQuestions)
+            //    {
+            //        if(_Questions.OtherQValuesNA.Contains(item.QOId))
+            //        {
+            //            _Questions.OtherQuestions.Remove(item);
+            //        }
+            //    }
+
+            //}
 
             _baseLayer = new StackLayout();
 
@@ -54,6 +68,16 @@ namespace CGFSMVVM.Views
                     WidthRequest=500,
                     Margin=new Thickness(0,5,0,5)
                 };
+
+                //Hide not Applicable Options
+                if (_Questions.OtherQuestions != null && _Questions.OtherQValuesNA != null)
+                {
+                    if (_Questions.OtherQValuesNA.Contains(i.ToString()))
+                    {
+                        _optionLabel.IsVisible = false;
+                        _checkBoxImage.IsVisible = false;
+                    }
+                }
 
                 _checkboxlayer.Children.Add(_checkBoxImage);
                 _checkboxlayer.Children.Add(_optionLabel);
