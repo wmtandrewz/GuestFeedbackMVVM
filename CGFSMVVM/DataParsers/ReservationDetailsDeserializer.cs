@@ -29,7 +29,7 @@ namespace CGFSMVVM.DataParsers
 
             Console.WriteLine(_result.Contains("Resource not found"));
 
-            if (!_result.Contains("Resource not found") && !_result.Contains("404"))
+            if (!_result.Contains("Resource not found"))
             {
                 List<ReservationDetailsModel> ReservationDetailList = JsonConvert.DeserializeObject<List<ReservationDetailsModel>>(_result);
 
