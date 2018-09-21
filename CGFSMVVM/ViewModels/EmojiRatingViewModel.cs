@@ -409,8 +409,15 @@ namespace CGFSMVVM.ViewModels
         {
             AddToFeedbackCart();
             SaveChildFeedbacks();
+            SetWiFiSMS();
             PageLoadHandler.LoadNextPage(_navigation, _currQuestionindex, _selectedValue);
             //_canLoadNext = true;
+        }
+
+        private async void SetWiFiSMS()
+        {
+            var res = await APIGetServices.SenWifiSMSAlert(_Questions.QNo,_selectedValue);
+            Debug.WriteLine("WIFI:" + res);
         }
 
         /// <summary>

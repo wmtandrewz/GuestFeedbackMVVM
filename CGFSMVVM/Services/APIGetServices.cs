@@ -137,5 +137,43 @@ namespace CGFSMVVM.Services
             }
         }
 
+
+        public static async Task<string> SenWifiSMSAlert(string QNo,string rating)
+        {
+            string resultData = null;
+
+            try
+            {
+                if (QNo == "14" && Convert.ToInt32(rating) < 3)
+                {
+
+                    HttpClient client = new HttpClient
+                    {
+                        BaseAddress = new Uri(Settings.BaseDomainURL)
+                    };
+
+                    var response = await client.GetAsync($"Feedback/SendWifiAlert?HotelCode={FeedbackCart._hotelIdentifier}&bookingId={FeedbackCart._resNum}&RoomNo={FeedbackCart._roomNum}&GuestName={FeedbackCart._guestName}&rating={rating}");
+                    resultData = response.Content.ReadAsStringAsync().Result;
+
+                    if (!string.IsNullOrEmpty(resultData))
+                    {
+                        Console.WriteLine("WiFI SMS Sent status : " + resultData);
+
+                        return resultData;
+                    }
+                    else
+                    {
+                        return resultData;
+                    }
+                }
+                return resultData;
+            }
+            catch (Exception)
+            {
+                return resultData;
+            }
+
+        }
+
     }
 }

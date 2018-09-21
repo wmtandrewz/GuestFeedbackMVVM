@@ -74,7 +74,7 @@ namespace CGFSMVVM.Services
                 }
 
 
-                form.Add(new ByteArrayContent(imageBytes, 0, imageBytes.Length), "profile_pic", $"{hotelCode}_{resNo}_{timeStamp}.txt");
+                form.Add(new ByteArrayContent(imageBytes, 0, imageBytes.Length), "profile_pic", $"{hotelCode}_{resNo}_{timeStamp}.jpg");
                 HttpResponseMessage response = await httpClient.PostAsync($"{Settings.FTPUri}Feedback/UploadGuestImage", form).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
