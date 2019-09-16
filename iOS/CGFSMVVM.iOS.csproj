@@ -77,7 +77,7 @@
     <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
-    <CodesignProvision>CGFS DEV</CodesignProvision>
+    <CodesignProvision>Guest Feedback Dev</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -228,6 +228,7 @@
     <BundleResource Include="Images\CGFSLogo.png" />
     <BundleResource Include="Images\checked.png" />
     <BundleResource Include="Images\unchecked.png" />
+    <BundleResource Include="Images\banners\3315.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />

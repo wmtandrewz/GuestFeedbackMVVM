@@ -103,8 +103,8 @@ namespace CGFSMVVM.Helpers
             get
             {
                 //return AppSettings.GetValueOrDefault("BaseDomainURL", "https://cheetah.azure-api.net/api/v1/");
-                return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPIDev/api/");
-                //return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPI/api/");
+                //return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPIDev/api/");
+                return AppSettings.GetValueOrDefault("BaseDomainURL", "http://chml.keells.lk/GuestFBAPI/api/");
             }
             set
             {
@@ -149,8 +149,8 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                //return AppSettings.GetValueOrDefault("ConfigAPIUri", "http://chml.keells.lk/GuestFBAPI/api/");
-                return AppSettings.GetValueOrDefault("ConfigAPIUri", "http://chml.keells.lk/GuestFBAPIDev/api/");
+                return AppSettings.GetValueOrDefault("ConfigAPIUri", "http://chml.keells.lk/GuestFBAPI/api/");
+                //return AppSettings.GetValueOrDefault("ConfigAPIUri", "http://chml.keells.lk/GuestFBAPIDev/api/");
             }
             set
             {
@@ -166,8 +166,8 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault("FTPUri", "http://chml.keells.lk/GuestFBAPIDev/api/");
-                //return AppSettings.GetValueOrDefault("FTPUri", "http://chml.keells.lk/GuestFBAPI/api/");
+                //return AppSettings.GetValueOrDefault("FTPUri", "http://chml.keells.lk/GuestFBAPIDev/api/");
+                return AppSettings.GetValueOrDefault("FTPUri", "http://chml.keells.lk/GuestFBAPI/api/");
             }
             set
             {
@@ -215,7 +215,7 @@ namespace CGFSMVVM.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault("AppVersion", "3.7");
+                return AppSettings.GetValueOrDefault("AppVersion", "3.8");
             }
             set
             {

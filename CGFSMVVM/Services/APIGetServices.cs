@@ -92,7 +92,7 @@ namespace CGFSMVVM.Services
                     return "";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return "";
             }
