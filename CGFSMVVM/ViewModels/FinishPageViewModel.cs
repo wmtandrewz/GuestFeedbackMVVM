@@ -7,7 +7,6 @@ using CGFSMVVM.DataParsers;
 using CGFSMVVM.Helpers;
 using CGFSMVVM.Models;
 using CGFSMVVM.Services;
-using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 

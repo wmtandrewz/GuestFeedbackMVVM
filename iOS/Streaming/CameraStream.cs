@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using AVFoundation;
 using Foundation;
-using Microsoft.AppCenter.Crashes;
 using UIKit;
 
 [assembly: Xamarin.Forms.Dependency(typeof(CGFSMVVM.iOS.Streaming.CameraStream))]

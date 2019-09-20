@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using CGFSMVVM.Helpers;
 using MailKit.Net.Smtp;
-using Microsoft.AppCenter.Crashes;
 using MimeKit;
 using MimeKit.Text;
 

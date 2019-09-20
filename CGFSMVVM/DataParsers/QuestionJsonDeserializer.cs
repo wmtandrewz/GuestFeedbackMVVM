@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CGFSMVVM.Helpers;
 using CGFSMVVM.Models;
 using CGFSMVVM.Services;
-using Microsoft.AppCenter.Analytics;
 using Newtonsoft.Json;
 
 namespace CGFSMVVM.DataParsers

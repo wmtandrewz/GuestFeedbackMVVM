@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Text;
 using CGFSMVVM.Models;
 using CGFSMVVM.Services;
-using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 
 namespace CGFSMVVM.DataParsers

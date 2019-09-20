@@ -2,8 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using CGFSMVVM.Helpers;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 
 namespace CGFSMVVM.Services
 {

@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CGFSMVVM.Helpers;
-using Microsoft.AppCenter.Crashes;
 using Xamarin.Forms;
 
 namespace CGFSMVVM.Services

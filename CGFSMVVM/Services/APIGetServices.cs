@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CGFSMVVM.Helpers;
-using Microsoft.AppCenter.Crashes;
 
 namespace CGFSMVVM.Services
 {
@@ -92,7 +91,7 @@ namespace CGFSMVVM.Services
                     return "";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }

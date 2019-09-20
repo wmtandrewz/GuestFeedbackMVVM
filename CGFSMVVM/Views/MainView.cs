@@ -7,8 +7,6 @@ using CGFSMVVM.Helpers;
 using CGFSMVVM.Models;
 using CGFSMVVM.Services;
 using CGFSMVVM.ViewModels;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Plugin.Connectivity;
 using Xamarin.Forms;
 

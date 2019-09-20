@@ -9,8 +9,6 @@ using CGFSMVVM.Helpers;
 using CGFSMVVM.Models;
 using CGFSMVVM.Services;
 using CGFSMVVM.Views;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Plugin.Connectivity;
 using Plugin.DeviceInfo;
 using Plugin.Geolocator;
@@ -105,7 +103,7 @@ namespace CGFSMVVM.ViewModels
 				}
 
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
                 Debug.WriteLine("App version failed");
 			}

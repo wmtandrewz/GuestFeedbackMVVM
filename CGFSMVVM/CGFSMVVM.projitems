@@ -73,11 +73,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataParsers\ConfigDeserializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HotelModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DeviceInfoModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Services\SAPAccessService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\oAuthLogin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UserLogout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemConfigView.xaml.cs">
@@ -89,10 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LoginView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)SystemConfigView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
